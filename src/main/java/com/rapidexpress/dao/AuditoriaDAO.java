@@ -42,7 +42,7 @@ public class AuditoriaDAO {
 
     /** Persiste un evento. Devuelve el id generado. */
     public long insertar(Auditoria evento) throws SQLException {
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              PreparedStatement ps = cn.prepareStatement(SQL_INSERT,
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
 
@@ -64,7 +64,7 @@ public class AuditoriaDAO {
 
     /** Últimos {@code limite} eventos, del más reciente al más antiguo. */
     public List<Auditoria> ultimos(int limite) throws SQLException {
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              PreparedStatement ps = cn.prepareStatement(SQL_ULTIMOS)) {
             ps.setInt(1, limite);
             try (ResultSet rs = ps.executeQuery()) {
@@ -75,7 +75,7 @@ public class AuditoriaDAO {
 
     /** Traza completa de una entidad concreta. */
     public List<Auditoria> porEntidad(String entidad, String idEntidad) throws SQLException {
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              PreparedStatement ps = cn.prepareStatement(SQL_POR_ENTIDAD)) {
             ps.setString(1, entidad);
             ps.setString(2, idEntidad);
@@ -88,7 +88,7 @@ public class AuditoriaDAO {
     /** Bitácora filtrada por periodo y, opcionalmente, por operación. */
     public List<Auditoria> porPeriodo(LocalDateTime desde, LocalDateTime hasta,
                                       String operacion) throws SQLException {
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              CallableStatement cs = cn.prepareCall("{CALL sp_auditoria_por_periodo(?, ?, ?)}")) {
             cs.setTimestamp(1, Timestamp.valueOf(desde));
             cs.setTimestamp(2, Timestamp.valueOf(hasta));

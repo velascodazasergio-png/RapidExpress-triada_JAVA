@@ -32,7 +32,7 @@ public class ReporteDAO {
     public List<EntregaDTO> entregasPorConductor(int idConductor, LocalDate desde,
                                                  LocalDate hasta) throws SQLException {
         List<EntregaDTO> lista = new ArrayList<>();
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              CallableStatement cs = cn.prepareCall("{CALL sp_entregas_por_conductor(?, ?, ?)}")) {
 
             cs.setInt(1, idConductor);
@@ -64,7 +64,7 @@ public class ReporteDAO {
     // ---------------------------------------------------------------
     public List<HistorialRutaDTO> historialRutasVehiculo(int idVehiculo) throws SQLException {
         List<HistorialRutaDTO> lista = new ArrayList<>();
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              CallableStatement cs = cn.prepareCall("{CALL sp_historial_rutas_vehiculo(?)}")) {
 
             cs.setInt(1, idVehiculo);
@@ -126,7 +126,7 @@ public class ReporteDAO {
 
     /** Trazabilidad de un paquete por su código de seguimiento. */
     public TablaReporte seguimientoPaquete(String codigo) throws SQLException {
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              CallableStatement cs = cn.prepareCall("{CALL sp_seguimiento_paquete(?)}")) {
             cs.setString(1, codigo);
             try (ResultSet rs = cs.executeQuery()) {
@@ -136,7 +136,7 @@ public class ReporteDAO {
     }
 
     private TablaReporte consultarVista(String titulo, String sql) throws SQLException {
-        try (Connection cn = ConexionBD.obtener();
+        try (Connection cn = ConexionBD.obtenerConexion();
              PreparedStatement ps = cn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             return TablaReporte.desde(titulo, rs);

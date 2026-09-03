@@ -1,8 +1,11 @@
 package com.rapidexpress.view;
 
+import com.rapidexpress.model.dto.TablaReporte;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -45,6 +48,46 @@ public final class ConsolaUtil {
 
     public static void info(String mensaje) {
         System.out.println("      " + mensaje);
+    }
+
+    // Imprime un aviso resaltado (para listados vacios o notas al usuario).
+    public static void aviso(String mensaje) {
+        System.out.println("  >> " + mensaje);
+    }
+
+    // Imprime una tabla de reporte: titulo, encabezados y filas con columnas alineadas.
+    public static void imprimir(TablaReporte tabla) {
+        titulo(tabla.getTitulo());
+        if (tabla.estaVacia()) {
+            aviso("El reporte no tiene datos.");
+            return;
+        }
+        List<String> encabezados = tabla.getEncabezados();
+        int columnas = encabezados.size();
+        int[] ancho = new int[columnas];
+        for (int i = 0; i < columnas; i++) {
+            ancho[i] = encabezados.get(i).length();
+        }
+        for (String[] fila : tabla.getFilas()) {
+            for (int i = 0; i < columnas; i++) {
+                int largo = fila[i] == null ? 1 : fila[i].length();
+                ancho[i] = Math.max(ancho[i], largo);
+            }
+        }
+        StringBuilder separador = new StringBuilder();
+        for (int i = 0; i < columnas; i++) {
+            System.out.printf("%-" + (ancho[i] + 2) + "s", encabezados.get(i));
+            separador.append("-".repeat(ancho[i] + 2));
+        }
+        System.out.println();
+        System.out.println(separador);
+        for (String[] fila : tabla.getFilas()) {
+            for (int i = 0; i < columnas; i++) {
+                System.out.printf("%-" + (ancho[i] + 2) + "s", fila[i] == null ? "-" : fila[i]);
+            }
+            System.out.println();
+        }
+        System.out.println("\n  " + tabla.getFilas().size() + " fila(s).");
     }
 
     public static String leerTexto(String etiqueta) {
@@ -111,5 +154,10 @@ public final class ConsolaUtil {
     public static void pausa() {
         System.out.print("\nPresione Enter para continuar...");
         SCANNER.nextLine();
+    }
+
+    // Alias de pausa(): espera a que el usuario pulse ENTER.
+    public static void pausar() {
+        pausa();
     }
 }
