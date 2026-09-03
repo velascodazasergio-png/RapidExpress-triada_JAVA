@@ -1,0 +1,25 @@
+# =====================================================================
+# RapidExpress - Configuracion de conexion a la base de datos
+# =====================================================================
+# Copie este archivo como  database.properties  (sin .example) en la
+# misma carpeta y complete los valores con los datos de su instancia
+# MySQL 8.0. El archivo database.properties esta en .gitignore: las
+# credenciales nunca se suben al repositorio.
+#
+#   cp src/main/resources/database.properties.example src/main/resources/database.properties
+#
+# ConexionBD.java lee estas tres claves:  db.url, db.user, db.password
+# ---------------------------------------------------------------------
+
+# JDBC URL. Debe apuntar al esquema 'rapidexpress' creado por los scripts
+# de la carpeta database/. Ajuste host y puerto a su instancia.
+#
+#  - Local:  jdbc:mysql://localhost:3306/rapidexpress
+#  - Nube:   jdbc:mysql://<host>:3306/rapidexpress
+#
+# Parametros recomendados (evitan avisos de zona horaria y de SSL):
+db.url=jdbc:mysql://localhost:3306/rapidexpress?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Bogota&characterEncoding=UTF-8
+
+# Usuario y contrasena de MySQL.
+db.user=root
+db.password=cambie_esta_contrasena
