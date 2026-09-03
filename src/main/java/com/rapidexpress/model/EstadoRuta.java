@@ -18,6 +18,7 @@ public enum EstadoRuta {
         return etiqueta;
     }
 
+    // Devuelve el valor del enum a partir de su etiqueta.
     public static EstadoRuta desdeEtiqueta(String etiqueta) {
         for (EstadoRuta e : values()) {
             if (e.etiqueta.equalsIgnoreCase(etiqueta)) {
@@ -27,6 +28,7 @@ public enum EstadoRuta {
         throw new IllegalArgumentException("Estado de ruta no valido: " + etiqueta);
     }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return etiqueta;

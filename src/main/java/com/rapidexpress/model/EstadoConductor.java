@@ -23,6 +23,7 @@ public enum EstadoConductor {
         return etiqueta;
     }
 
+    // Devuelve el valor del enum a partir de su etiqueta.
     public static EstadoConductor desdeEtiqueta(String etiqueta) {
         for (EstadoConductor e : values()) {
             if (e.etiqueta.equalsIgnoreCase(etiqueta)) {
@@ -32,6 +33,7 @@ public enum EstadoConductor {
         throw new IllegalArgumentException("Estado de conductor no valido: " + etiqueta);
     }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return etiqueta;

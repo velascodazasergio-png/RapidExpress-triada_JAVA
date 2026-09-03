@@ -26,6 +26,7 @@ public enum EstadoPaquete {
         return etiqueta;
     }
 
+    // Devuelve el valor del enum a partir de su etiqueta.
     public static EstadoPaquete desdeEtiqueta(String etiqueta) {
         for (EstadoPaquete e : values()) {
             if (e.etiqueta.equalsIgnoreCase(etiqueta)) {
@@ -49,10 +50,12 @@ public enum EstadoPaquete {
         }
     }
 
+    // Indica si es un estado final (Entregado o Devuelto).
     public boolean esFinal() {
         return this == ENTREGADO || this == DEVUELTO;
     }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return etiqueta;

@@ -25,6 +25,7 @@ public class TablaReporte {
     private final List<String> encabezados;
     private final List<String[]> filas;
 
+    // Crea una instancia de TablaReporte.
     public TablaReporte(String titulo, List<String> encabezados, List<String[]> filas) {
         this.titulo = titulo;
         this.encabezados = encabezados;

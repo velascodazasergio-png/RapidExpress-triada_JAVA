@@ -5,6 +5,7 @@ public enum TipoLicencia {
 
     A1, A2, B1, B2, B3, C1, C2, C3;
 
+    // Devuelve el valor del enum a partir de su texto.
     public static TipoLicencia desdeTexto(String texto) {
         if (texto == null) {
             throw new IllegalArgumentException("El tipo de licencia es obligatorio.");
