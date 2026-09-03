@@ -13,6 +13,7 @@ public class AuditoriaView {
 
     private final AuditoriaController controller = new AuditoriaController();
 
+    // Muestra el menu y procesa las opciones del usuario.
     public void mostrar() {
         boolean salir = false;
         while (!salir) {
@@ -54,6 +55,7 @@ public class AuditoriaView {
         }
     }
 
+    // Pide el rango de fechas y lista los eventos.
     private void porPeriodo() throws SQLException {
         LocalDate desde = ConsolaUtil.leerFecha("Fecha inicial");
         LocalDate hasta = ConsolaUtil.leerFecha("Fecha final");
@@ -62,6 +64,7 @@ public class AuditoriaView {
                 controller.porPeriodo(desde, hasta, op));
     }
 
+    // Imprime la lista de eventos con su total.
     private void listar(String titulo, List<Auditoria> eventos) {
         ConsolaUtil.titulo(titulo);
         if (eventos.isEmpty()) {

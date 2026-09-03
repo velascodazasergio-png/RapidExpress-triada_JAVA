@@ -20,13 +20,16 @@ public final class ConsolaUtil {
 
     private static final Scanner SCANNER = new Scanner(System.in);
 
+    // Constructor privado: clase de utilidad, no se instancia.
     private ConsolaUtil() {
     }
 
+    // Devuelve el unico Scanner de System.in que comparte toda la aplicacion.
     public static Scanner scanner() {
         return SCANNER;
     }
 
+    // Imprime un titulo enmarcado en la consola.
     public static void titulo(String texto) {
         System.out.println();
         System.out.println("=".repeat(62));
@@ -34,18 +37,22 @@ public final class ConsolaUtil {
         System.out.println("=".repeat(62));
     }
 
+    // Imprime una linea separadora.
     public static void separador() {
         System.out.println("-".repeat(62));
     }
 
+    // Imprime un mensaje de exito ([OK]).
     public static void exito(String mensaje) {
         System.out.println("[OK] " + mensaje);
     }
 
+    // Imprime un mensaje de error ([ERROR]).
     public static void error(String mensaje) {
         System.out.println("[ERROR] " + mensaje);
     }
 
+    // Imprime un mensaje informativo con sangria.
     public static void info(String mensaje) {
         System.out.println("      " + mensaje);
     }
@@ -90,6 +97,7 @@ public final class ConsolaUtil {
         System.out.println("\n  " + tabla.getFilas().size() + " fila(s).");
     }
 
+    // Pide un texto por consola y no acepta vacio.
     public static String leerTexto(String etiqueta) {
         while (true) {
             System.out.print(etiqueta + ": ");
@@ -101,12 +109,14 @@ public final class ConsolaUtil {
         }
     }
 
+    // Pide un texto por consola; ENTER devuelve null.
     public static String leerTextoOpcional(String etiqueta) {
         System.out.print(etiqueta + " (opcional, Enter para omitir): ");
         String valor = SCANNER.nextLine().trim();
         return valor.isEmpty() ? null : valor;
     }
 
+    // Pide un numero entero por consola, reintentando si no es valido.
     public static int leerEntero(String etiqueta) {
         while (true) {
             System.out.print(etiqueta + ": ");
@@ -118,6 +128,7 @@ public final class ConsolaUtil {
         }
     }
 
+    // Pide un numero decimal por consola, reintentando si no es valido.
     public static BigDecimal leerDecimal(String etiqueta) {
         while (true) {
             System.out.print(etiqueta + ": ");
@@ -145,12 +156,14 @@ public final class ConsolaUtil {
         }
     }
 
+    // Pide una confirmacion s/n y devuelve true si es afirmativa.
     public static boolean confirmar(String pregunta) {
         System.out.print(pregunta + " (s/n): ");
         String valor = SCANNER.nextLine().trim().toLowerCase();
         return valor.equals("s") || valor.equals("si");
     }
 
+    // Espera a que el usuario pulse ENTER para continuar.
     public static void pausa() {
         System.out.print("\nPresione Enter para continuar...");
         SCANNER.nextLine();

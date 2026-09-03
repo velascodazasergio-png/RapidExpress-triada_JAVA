@@ -13,6 +13,7 @@ public class ReporteView {
 
     private final ReporteController controller = new ReporteController();
 
+    // Muestra el menu y procesa las opciones del usuario.
     public void mostrar() {
         boolean salir = false;
         while (!salir) {
@@ -80,6 +81,7 @@ public class ReporteView {
                 entregas.size(), controller.pesoTotal(entregas));
     }
 
+    // Pide un vehiculo y muestra su historial de rutas.
     private void historialVehiculo() throws SQLException {
         int id = ConsolaUtil.leerEntero("Id del vehículo");
         List<HistorialRutaDTO> historial = controller.historialVehiculo(id);
@@ -103,6 +105,7 @@ public class ReporteView {
                 historial.size(), controller.ocupacionPromedio(historial));
     }
 
+    // Pide un codigo y muestra el seguimiento del paquete.
     private void seguimientoPaquete() throws SQLException {
         String codigo = ConsolaUtil.leerTexto("Código de seguimiento");
         ConsolaUtil.imprimir(controller.seguimientoPaquete(codigo));
