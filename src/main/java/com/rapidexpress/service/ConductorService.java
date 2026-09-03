@@ -6,6 +6,7 @@ import com.rapidexpress.dao.VehiculoDAO;
 import com.rapidexpress.excepcion.NegocioException;
 import com.rapidexpress.model.*;
 import com.rapidexpress.util.ConexionBD;
+import com.rapidexpress.util.TransaccionUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -79,38 +80,26 @@ public class ConductorService {
 
     // Busca un registro por su id.
     public Conductor buscarPorId(int idConductor) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return conductorDAO.buscarPorId(cn, idConductor);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("buscar el conductor",
+                cn -> conductorDAO.buscarPorId(cn, idConductor));
     }
 
     // Busca un conductor por su identificacion.
     public Conductor buscarPorIdentificacion(String identificacion) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return conductorDAO.buscarPorIdentificacion(cn, identificacion);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("buscar el conductor",
+                cn -> conductorDAO.buscarPorIdentificacion(cn, identificacion));
     }
 
     // Lista todos los conductores.
     public List<Conductor> listarConductores() throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return conductorDAO.listarTodos(cn);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("listar los conductores",
+                cn -> conductorDAO.listarTodos(cn));
     }
 
     // Lista los registros filtrados por estado.
     public List<Conductor> listarPorEstado(EstadoConductor estado) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return conductorDAO.listarPorEstado(cn, estado);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("listar los conductores",
+                cn -> conductorDAO.listarPorEstado(cn, estado));
     }
 
     /** Cambio manual de estado. En Ruta solo lo asigna el sistema al iniciar una ruta. */
@@ -210,20 +199,14 @@ public class ConductorService {
 
     // Lista las asignaciones conductor-vehiculo vigentes.
     public List<Asignacion> listarAsignacionesVigentes() throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return asignacionDAO.listarVigentes(cn);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("listar las asignaciones vigentes",
+                cn -> asignacionDAO.listarVigentes(cn));
     }
 
     // Devuelve el historial de asignaciones de un vehiculo.
     public List<Asignacion> historialPorVehiculo(int idVehiculo) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return asignacionDAO.listarHistorialPorVehiculo(cn, idVehiculo);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("consultar el historial de asignaciones",
+                cn -> asignacionDAO.listarHistorialPorVehiculo(cn, idVehiculo));
     }
 
     // =================================================================
@@ -232,11 +215,8 @@ public class ConductorService {
 
     /** Conductor que actualmente maneja ese vehiculo, o null si no hay ninguno. */
     public Conductor obtenerConductorAsignadoA(int idVehiculo) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return obtenerConductorAsignadoA(cn, idVehiculo);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("consultar el conductor asignado",
+                cn -> obtenerConductorAsignadoA(cn, idVehiculo));
     }
 
     /** Igual que el anterior pero sobre la conexion recibida (para transacciones ajenas). */

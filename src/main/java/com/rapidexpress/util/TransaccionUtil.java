@@ -29,6 +29,21 @@ public final class TransaccionUtil {
     }
 
     /**
+     * Ejecuta una consulta de solo lectura: abre y cierra la conexion y traduce
+     * cualquier {@link SQLException} a {@link NegocioException}. Sin transaccion
+     * explicita ni reintentos: para eso esta {@link #ejecutar}.
+     *
+     * @param descripcion texto corto para el mensaje de error ("listar los vehiculos")
+     */
+    public static <T> T consultar(String descripcion, Bloque<T> bloque) throws NegocioException {
+        try (Connection cn = ConexionBD.obtenerConexion()) {
+            return bloque.ejecutar(cn);
+        } catch (SQLException e) {
+            throw new NegocioException("Error de base de datos al " + descripcion + ": " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * @param descripcion texto corto para el mensaje de error ("crear la ruta")
      */
     public static <T> T ejecutar(String descripcion, Bloque<T> bloque) throws NegocioException {

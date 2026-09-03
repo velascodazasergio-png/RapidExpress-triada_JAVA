@@ -7,6 +7,7 @@ import com.rapidexpress.dao.VehiculoDAO;
 import com.rapidexpress.excepcion.NegocioException;
 import com.rapidexpress.model.*;
 import com.rapidexpress.util.ConexionBD;
+import com.rapidexpress.util.TransaccionUtil;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -85,38 +86,26 @@ public class FlotaService {
 
     // Busca un registro por su id.
     public Vehiculo buscarPorId(int idVehiculo) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return vehiculoDAO.buscarPorId(cn, idVehiculo);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("buscar el vehiculo",
+                cn -> vehiculoDAO.buscarPorId(cn, idVehiculo));
     }
 
     // Busca un vehiculo por su placa.
     public Vehiculo buscarPorPlaca(String placa) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return vehiculoDAO.buscarPorPlaca(cn, placa);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("buscar el vehiculo",
+                cn -> vehiculoDAO.buscarPorPlaca(cn, placa));
     }
 
     // Lista todos los vehiculos.
     public List<Vehiculo> listarVehiculos() throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return vehiculoDAO.listarTodos(cn);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("listar los vehiculos",
+                cn -> vehiculoDAO.listarTodos(cn));
     }
 
     // Lista los registros filtrados por estado.
     public List<Vehiculo> listarPorEstado(EstadoVehiculo estado) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return vehiculoDAO.listarPorEstado(cn, estado);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("listar los vehiculos",
+                cn -> vehiculoDAO.listarPorEstado(cn, estado));
     }
 
     /**
@@ -227,21 +216,16 @@ public class FlotaService {
 
     // Devuelve el historial de mantenimientos de un vehiculo.
     public List<Mantenimiento> historialMantenimientos(int idVehiculo) throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
+        return TransaccionUtil.consultar("consultar el historial de mantenimientos", cn -> {
             obtenerObligatorio(cn, idVehiculo);
             return mantenimientoDAO.listarPorVehiculo(cn, idVehiculo);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        });
     }
 
     // Lista los mantenimientos sin finalizar.
     public List<Mantenimiento> listarMantenimientosAbiertos() throws NegocioException {
-        try (Connection cn = ConexionBD.obtenerConexion()) {
-            return mantenimientoDAO.listarAbiertos(cn);
-        } catch (SQLException e) {
-            throw new NegocioException("Error de base de datos: " + e.getMessage(), e);
-        }
+        return TransaccionUtil.consultar("listar los mantenimientos abiertos",
+                cn -> mantenimientoDAO.listarAbiertos(cn));
     }
 
     // =================================================================
