@@ -1,0 +1,23 @@
+# Compilados y artefactos de build
+target/
+*.class
+*.jar
+*.war
+
+# Credenciales: nunca se versionan
+src/main/resources/db.properties
+
+# Bitácora generada en tiempo de ejecución
+logs/*.log
+
+# Entornos de desarrollo
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
