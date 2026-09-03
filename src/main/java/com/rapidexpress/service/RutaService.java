@@ -344,9 +344,13 @@ public class RutaService {
                         + actual.getEstado().getEtiqueta() + ".");
             }
             for (Integer idPaquete : rutaDAO.idsPaquetesDeRuta(cn, idRuta)) {
-                paqueteDAO.buscarPorIdBloqueando(cn, idPaquete);
-                paqueteDAO.actualizarEstadoSi(cn, idPaquete,
+                Paquete paquete = paqueteDAO.buscarPorIdBloqueando(cn, idPaquete);
+                boolean devuelto = paquete != null && paqueteDAO.actualizarEstadoSi(cn, idPaquete,
                         EstadoPaquete.ASIGNADO_A_RUTA, EstadoPaquete.EN_BODEGA);
+                if (!devuelto) {
+                    throw new NegocioException("Un paquete de la ruta fue modificado por otra "
+                            + "terminal. No se cancelo la ruta.");
+                }
             }
             if (!rutaDAO.actualizarEstadoSi(cn, idRuta, EstadoRuta.PLANIFICADA, EstadoRuta.CANCELADA)) {
                 throw new NegocioException("Otra terminal ya modifico esta ruta.");
