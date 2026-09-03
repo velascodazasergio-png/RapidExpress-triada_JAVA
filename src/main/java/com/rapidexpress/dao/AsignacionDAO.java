@@ -16,6 +16,7 @@ public class AsignacionDAO {
           + "JOIN conductores c ON c.id_conductor = a.id_conductor "
           + "JOIN vehiculos  v ON v.id_vehiculo  = a.id_vehiculo ";
 
+    // Inserta el registro y devuelve su id generado.
     public int insertar(Connection cn, Asignacion a) throws SQLException {
         String sql = "INSERT INTO asignaciones_conductor_vehiculo (id_conductor, id_vehiculo, fecha_inicio) "
                    + "VALUES (?, ?, ?)";
@@ -43,16 +44,19 @@ public class AsignacionDAO {
         }
     }
 
+    // Devuelve la asignacion vigente de un conductor.
     public Asignacion buscarVigentePorConductor(Connection cn, int idConductor) throws SQLException {
         String sql = SELECT_BASE + "WHERE a.id_conductor = ? AND a.fecha_fin IS NULL";
         return buscarUno(cn, sql, idConductor);
     }
 
+    // Devuelve la asignacion vigente de un vehiculo.
     public Asignacion buscarVigentePorVehiculo(Connection cn, int idVehiculo) throws SQLException {
         String sql = SELECT_BASE + "WHERE a.id_vehiculo = ? AND a.fecha_fin IS NULL";
         return buscarUno(cn, sql, idVehiculo);
     }
 
+    // Lista las asignaciones vigentes.
     public List<Asignacion> listarVigentes(Connection cn) throws SQLException {
         String sql = SELECT_BASE + "WHERE a.fecha_fin IS NULL ORDER BY v.placa";
         List<Asignacion> lista = new ArrayList<>();
@@ -64,16 +68,19 @@ public class AsignacionDAO {
         return lista;
     }
 
+    // Lista el historial de asignaciones de un vehiculo.
     public List<Asignacion> listarHistorialPorVehiculo(Connection cn, int idVehiculo) throws SQLException {
         String sql = SELECT_BASE + "WHERE a.id_vehiculo = ? ORDER BY a.fecha_inicio DESC";
         return listar(cn, sql, idVehiculo);
     }
 
+    // Lista el historial de asignaciones de un conductor.
     public List<Asignacion> listarHistorialPorConductor(Connection cn, int idConductor) throws SQLException {
         String sql = SELECT_BASE + "WHERE a.id_conductor = ? ORDER BY a.fecha_inicio DESC";
         return listar(cn, sql, idConductor);
     }
 
+    // Ejecuta la consulta y devuelve una sola fila, o null.
     private Asignacion buscarUno(Connection cn, String sql, int parametro) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setInt(1, parametro);
@@ -83,6 +90,7 @@ public class AsignacionDAO {
         }
     }
 
+    // Lista todos los registros.
     private List<Asignacion> listar(Connection cn, String sql, int parametro) throws SQLException {
         List<Asignacion> lista = new ArrayList<>();
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -96,6 +104,7 @@ public class AsignacionDAO {
         return lista;
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private Asignacion mapear(ResultSet rs) throws SQLException {
         Asignacion a = new Asignacion();
         a.setIdAsignacion(rs.getInt("id_asignacion"));

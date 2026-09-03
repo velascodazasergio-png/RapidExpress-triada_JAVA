@@ -14,6 +14,7 @@ public class MantenimientoDAO {
     private static final String COLUMNAS =
             "id_mantenimiento, id_vehiculo, tipo, descripcion, fecha_inicio, fecha_fin, costo, taller";
 
+    // Inserta el registro y devuelve su id generado.
     public int insertar(Connection cn, Mantenimiento m) throws SQLException {
         String sql = "INSERT INTO mantenimientos (id_vehiculo, tipo, descripcion, fecha_inicio, fecha_fin, costo, taller) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -48,6 +49,7 @@ public class MantenimientoDAO {
         }
     }
 
+    // Busca un registro por su id.
     public Mantenimiento buscarPorId(Connection cn, int idMantenimiento) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM mantenimientos WHERE id_mantenimiento = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -74,6 +76,7 @@ public class MantenimientoDAO {
         return lista;
     }
 
+    // Lista los mantenimientos sin finalizar.
     public List<Mantenimiento> listarAbiertos(Connection cn) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM mantenimientos WHERE fecha_fin IS NULL "
                    + "ORDER BY fecha_inicio";
@@ -86,6 +89,7 @@ public class MantenimientoDAO {
         return lista;
     }
 
+    // Cuenta los mantenimientos abiertos de un vehiculo.
     public int contarAbiertosPorVehiculo(Connection cn, int idVehiculo) throws SQLException {
         String sql = "SELECT COUNT(*) FROM mantenimientos WHERE id_vehiculo = ? AND fecha_fin IS NULL";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -96,6 +100,7 @@ public class MantenimientoDAO {
         }
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private Mantenimiento mapear(ResultSet rs) throws SQLException {
         Mantenimiento m = new Mantenimiento();
         m.setIdMantenimiento(rs.getInt("id_mantenimiento"));

@@ -14,6 +14,7 @@ public class ConductorDAO {
     private static final String COLUMNAS =
             "id_conductor, identificacion, nombre_completo, tipo_licencia, contacto, estado";
 
+    // Inserta el registro y devuelve su id generado.
     public int insertar(Connection cn, Conductor c) throws SQLException {
         String sql = "INSERT INTO conductores (identificacion, nombre_completo, tipo_licencia, contacto, estado) "
                    + "VALUES (?, ?, ?, ?, ?)";
@@ -33,6 +34,7 @@ public class ConductorDAO {
         return c.getIdConductor();
     }
 
+    // Actualiza el registro; devuelve si cambio alguna fila.
     public boolean actualizar(Connection cn, Conductor c) throws SQLException {
         String sql = "UPDATE conductores SET identificacion = ?, nombre_completo = ?, tipo_licencia = ?, "
                    + "contacto = ? WHERE id_conductor = ?";
@@ -46,6 +48,7 @@ public class ConductorDAO {
         }
     }
 
+    // Actualiza solo el estado del registro.
     public boolean actualizarEstado(Connection cn, int idConductor, EstadoConductor estado) throws SQLException {
         String sql = "UPDATE conductores SET estado = ? WHERE id_conductor = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -55,6 +58,7 @@ public class ConductorDAO {
         }
     }
 
+    // Elimina el registro por su id.
     public boolean eliminar(Connection cn, int idConductor) throws SQLException {
         String sql = "DELETE FROM conductores WHERE id_conductor = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -63,6 +67,7 @@ public class ConductorDAO {
         }
     }
 
+    // Busca un registro por su id.
     public Conductor buscarPorId(Connection cn, int idConductor) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM conductores WHERE id_conductor = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -73,6 +78,7 @@ public class ConductorDAO {
         }
     }
 
+    // Busca un conductor por su identificacion.
     public Conductor buscarPorIdentificacion(Connection cn, String identificacion) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM conductores WHERE identificacion = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -83,6 +89,7 @@ public class ConductorDAO {
         }
     }
 
+    // Lista todos los registros ordenados.
     public List<Conductor> listarTodos(Connection cn) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM conductores ORDER BY nombre_completo";
         List<Conductor> lista = new ArrayList<>();
@@ -94,6 +101,7 @@ public class ConductorDAO {
         return lista;
     }
 
+    // Lista los registros filtrados por estado.
     public List<Conductor> listarPorEstado(Connection cn, EstadoConductor estado) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM conductores WHERE estado = ? ORDER BY nombre_completo";
         List<Conductor> lista = new ArrayList<>();
@@ -119,6 +127,7 @@ public class ConductorDAO {
         }
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private Conductor mapear(ResultSet rs) throws SQLException {
         Conductor c = new Conductor();
         c.setIdConductor(rs.getInt("id_conductor"));

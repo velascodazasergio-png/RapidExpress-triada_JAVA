@@ -18,6 +18,7 @@ public class VehiculoDAO {
     private static final String COLUMNAS =
             "id_vehiculo, placa, marca, modelo, anio_fabricacion, capacidad_carga_kg, estado";
 
+    // Inserta el registro y devuelve su id generado.
     public int insertar(Connection cn, Vehiculo v) throws SQLException {
         String sql = "INSERT INTO vehiculos (placa, marca, modelo, anio_fabricacion, capacidad_carga_kg, estado) "
                    + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -38,6 +39,7 @@ public class VehiculoDAO {
         return v.getIdVehiculo();
     }
 
+    // Actualiza el registro; devuelve si cambio alguna fila.
     public boolean actualizar(Connection cn, Vehiculo v) throws SQLException {
         String sql = "UPDATE vehiculos SET placa = ?, marca = ?, modelo = ?, anio_fabricacion = ?, "
                    + "capacidad_carga_kg = ? WHERE id_vehiculo = ?";
@@ -52,6 +54,7 @@ public class VehiculoDAO {
         }
     }
 
+    // Actualiza solo el estado del registro.
     public boolean actualizarEstado(Connection cn, int idVehiculo, EstadoVehiculo estado) throws SQLException {
         String sql = "UPDATE vehiculos SET estado = ? WHERE id_vehiculo = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -61,6 +64,7 @@ public class VehiculoDAO {
         }
     }
 
+    // Elimina el registro por su id.
     public boolean eliminar(Connection cn, int idVehiculo) throws SQLException {
         String sql = "DELETE FROM vehiculos WHERE id_vehiculo = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -69,6 +73,7 @@ public class VehiculoDAO {
         }
     }
 
+    // Busca un registro por su id.
     public Vehiculo buscarPorId(Connection cn, int idVehiculo) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM vehiculos WHERE id_vehiculo = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -79,6 +84,7 @@ public class VehiculoDAO {
         }
     }
 
+    // Busca un vehiculo por su placa.
     public Vehiculo buscarPorPlaca(Connection cn, String placa) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM vehiculos WHERE placa = ?";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -89,6 +95,7 @@ public class VehiculoDAO {
         }
     }
 
+    // Lista todos los registros ordenados.
     public List<Vehiculo> listarTodos(Connection cn) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM vehiculos ORDER BY placa";
         List<Vehiculo> lista = new ArrayList<>();
@@ -100,6 +107,7 @@ public class VehiculoDAO {
         return lista;
     }
 
+    // Lista los registros filtrados por estado.
     public List<Vehiculo> listarPorEstado(Connection cn, EstadoVehiculo estado) throws SQLException {
         String sql = "SELECT " + COLUMNAS + " FROM vehiculos WHERE estado = ? ORDER BY placa";
         List<Vehiculo> lista = new ArrayList<>();
@@ -129,6 +137,7 @@ public class VehiculoDAO {
         }
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private Vehiculo mapear(ResultSet rs) throws SQLException {
         Vehiculo v = new Vehiculo();
         v.setIdVehiculo(rs.getInt("id_vehiculo"));
