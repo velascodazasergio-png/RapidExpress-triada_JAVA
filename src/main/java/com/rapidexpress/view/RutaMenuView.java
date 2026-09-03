@@ -25,6 +25,7 @@ public class RutaMenuView {
     private final RutaController controlador = new RutaController();
     private final PaqueteController paqueteControlador = new PaqueteController();
 
+    // Muestra el menu y procesa las opciones del usuario.
     public void mostrar() {
         boolean salir = false;
         while (!salir) {
@@ -65,6 +66,7 @@ public class RutaMenuView {
         }
     }
 
+    // Guia la creacion de una hoja de ruta por consola.
     private void crearRuta() throws NegocioException {
         ConsolaUtil.titulo("Crear hoja de ruta");
 
@@ -112,6 +114,7 @@ public class RutaMenuView {
                 + ruta.getCapacidadVehiculoKg().subtract(ruta.getPesoTotalKg()) + " kg libre).");
     }
 
+    // Muestra las rutas planificadas e inicia una.
     private void iniciarRuta() throws NegocioException {
         ConsolaUtil.titulo("Iniciar ruta");
         List<Ruta> planificadas = controlador.listarRutasPorEstado(EstadoRuta.PLANIFICADA);
@@ -126,6 +129,7 @@ public class RutaMenuView {
         ConsolaUtil.info(ruta.getPaquetes().size() + " paquete(s) pasaron a En Transito.");
     }
 
+    // Muestra el avance de las rutas en curso.
     private void monitorear() throws NegocioException {
         ConsolaUtil.titulo("Rutas en curso");
         List<Ruta> activas = controlador.listarRutasActivas();
@@ -148,18 +152,21 @@ public class RutaMenuView {
         }
     }
 
+    // Pide un codigo y marca el paquete como Entregado.
     private void registrarEntrega() throws NegocioException {
         ConsolaUtil.titulo("Registrar entrega");
         controlador.registrarEntrega(ConsolaUtil.leerTexto("Codigo de seguimiento del paquete"));
         ConsolaUtil.exito("Paquete marcado como Entregado.");
     }
 
+    // Pide un codigo y marca el paquete como Devuelto.
     private void registrarDevolucion() throws NegocioException {
         ConsolaUtil.titulo("Registrar devolucion");
         controlador.registrarDevolucion(ConsolaUtil.leerTexto("Codigo de seguimiento del paquete"));
         ConsolaUtil.exito("Paquete marcado como Devuelto.");
     }
 
+    // Muestra las rutas en curso y finaliza una.
     private void finalizarRuta() throws NegocioException {
         ConsolaUtil.titulo("Finalizar ruta");
         List<Ruta> activas = controlador.listarRutasActivas();
@@ -171,6 +178,7 @@ public class RutaMenuView {
         ConsolaUtil.exito("Ruta finalizada. El vehiculo vuelve a Disponible y el conductor a Activo.");
     }
 
+    // Muestra las rutas planificadas y cancela una.
     private void cancelarRuta() throws NegocioException {
         ConsolaUtil.titulo("Cancelar ruta planificada");
         List<Ruta> planificadas = controlador.listarRutasPorEstado(EstadoRuta.PLANIFICADA);
@@ -187,6 +195,7 @@ public class RutaMenuView {
         ConsolaUtil.exito("Ruta cancelada.");
     }
 
+    // Pide un id y muestra el detalle de la ruta.
     private void verDetalle() throws NegocioException {
         ConsolaUtil.titulo("Detalle de ruta");
         Ruta ruta = controlador.consultarRuta(ConsolaUtil.leerEntero("Id de la ruta"));
@@ -207,6 +216,7 @@ public class RutaMenuView {
         }
     }
 
+    // Pide un estado y lista los rutas en ese estado.
     private void listarPorEstado() throws NegocioException {
         ConsolaUtil.titulo("Rutas por estado");
         EstadoRuta[] estados = EstadoRuta.values();
@@ -221,6 +231,7 @@ public class RutaMenuView {
         imprimirRutas(controlador.listarRutasPorEstado(estados[opcion - 1]));
     }
 
+    // Convierte una lista de ids separados por coma en enteros.
     private List<Integer> leerIds(String entrada) {
         List<Integer> ids = new ArrayList<>();
         for (String parte : entrada.split(",")) {
@@ -237,6 +248,7 @@ public class RutaMenuView {
         return ids;
     }
 
+    // Imprime la lista de rutas en consola.
     private void imprimirRutas(List<Ruta> rutas) {
         ConsolaUtil.separador();
         if (rutas.isEmpty()) {

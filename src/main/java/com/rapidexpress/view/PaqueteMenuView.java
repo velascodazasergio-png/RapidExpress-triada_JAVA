@@ -18,6 +18,7 @@ public class PaqueteMenuView {
 
     private final PaqueteController controlador = new PaqueteController();
 
+    // Muestra el menu y procesa las opciones del usuario.
     public void mostrar() {
         boolean salir = false;
         while (!salir) {
@@ -56,6 +57,7 @@ public class PaqueteMenuView {
         }
     }
 
+    // Registra un cliente nuevo.
     private void registrarCliente() throws NegocioException {
         ConsolaUtil.titulo("Registrar cliente");
         Cliente cliente = new Cliente();
@@ -70,6 +72,7 @@ public class PaqueteMenuView {
         ConsolaUtil.exito("Cliente registrado con id " + guardado.getIdCliente() + ".");
     }
 
+    // Pide los datos y registra un paquete.
     private void registrarPaquete() throws NegocioException {
         ConsolaUtil.titulo("Registrar paquete");
         List<Cliente> clientes = controlador.listarClientes();
@@ -97,6 +100,7 @@ public class PaqueteMenuView {
         ConsolaUtil.info("Codigo de seguimiento: " + guardado.getCodigoSeguimiento());
     }
 
+    // Pide un codigo y muestra la ficha del paquete.
     private void rastrear() throws NegocioException {
         ConsolaUtil.titulo("Rastrear paquete");
         Paquete p = controlador.rastrear(ConsolaUtil.leerTexto("Codigo de seguimiento"));
@@ -116,6 +120,7 @@ public class PaqueteMenuView {
         }
     }
 
+    // Pide un estado y lista los paquetes en ese estado.
     private void listarPorEstado() throws NegocioException {
         ConsolaUtil.titulo("Paquetes por estado");
         EstadoPaquete estado = elegirEstado();
@@ -124,6 +129,7 @@ public class PaqueteMenuView {
         }
     }
 
+    // Pide los nuevos datos y edita un paquete En Bodega.
     private void editarPaquete() throws NegocioException {
         ConsolaUtil.titulo("Editar paquete");
         Paquete p = controlador.rastrear(ConsolaUtil.leerTexto("Codigo de seguimiento"));
@@ -143,6 +149,7 @@ public class PaqueteMenuView {
         ConsolaUtil.exito("Paquete actualizado.");
     }
 
+    // Pide un estado y lo aplica a un paquete.
     private void cambiarEstado() throws NegocioException {
         ConsolaUtil.titulo("Cambiar estado de un paquete");
         Paquete p = controlador.rastrear(ConsolaUtil.leerTexto("Codigo de seguimiento"));
@@ -154,6 +161,7 @@ public class PaqueteMenuView {
         }
     }
 
+    // Pide un estado desde un menu numerico.
     private EstadoPaquete elegirEstado() {
         EstadoPaquete[] estados = EstadoPaquete.values();
         for (int i = 0; i < estados.length; i++) {
@@ -167,6 +175,7 @@ public class PaqueteMenuView {
         return estados[opcion - 1];
     }
 
+    // Imprime la lista de paquetes en consola.
     private void imprimirPaquetes(List<Paquete> paquetes) {
         ConsolaUtil.separador();
         if (paquetes.isEmpty()) {
@@ -179,6 +188,7 @@ public class PaqueteMenuView {
         ConsolaUtil.info("Total: " + paquetes.size() + " paquete(s).");
     }
 
+    // Imprime la lista de clientes en consola.
     private void imprimirClientes(List<Cliente> clientes) {
         ConsolaUtil.separador();
         if (clientes.isEmpty()) {
