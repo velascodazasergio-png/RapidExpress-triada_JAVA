@@ -1,0 +1,5 @@
+# Copie este archivo como database.properties y complete sus datos.
+# database.properties NO se sube al repositorio (esta en .gitignore).
+db.url=jdbc:mysql://<host-en-la-nube>:3306/rapidexpress?useSSL=true&serverTimezone=America/Bogota&allowPublicKeyRetrieval=true
+db.user=<usuario>
+db.password=<contrasena>

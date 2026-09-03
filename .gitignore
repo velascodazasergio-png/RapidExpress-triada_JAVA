@@ -1,0 +1,12 @@
+target/
+*.class
+*.jar
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+# Credenciales reales de la base de datos
+src/main/resources/database.properties
+.claude/settings.local.json*.zip
