@@ -36,6 +36,7 @@ public final class AuditLogger {
 
     private static String usuarioActual = "SISTEMA";
 
+    // Constructor privado: clase de utilidad, no se instancia.
     private AuditLogger() { }
 
     /** Identifica al operador de la sesión; aparece en cada evento registrado. */
@@ -43,6 +44,7 @@ public final class AuditLogger {
         usuarioActual = (usuario == null || usuario.isBlank()) ? "SISTEMA" : usuario.trim();
     }
 
+    // Devuelve el usuario de la sesion actual.
     public static synchronized String usuarioActual() {
         return usuarioActual;
     }
@@ -72,6 +74,7 @@ public final class AuditLogger {
         registrar(operacion, entidad, idEntidad, null, null, detalle);
     }
 
+    // Anade el evento al archivo de bitacora.
     private static void escribirArchivo(Auditoria evento) {
         try {
             Path carpeta = ARCHIVO.getParent();
@@ -92,6 +95,7 @@ public final class AuditLogger {
         }
     }
 
+    // Inserta el evento en la tabla de auditoria.
     private static void escribirBaseDatos(Auditoria evento) {
         try {
             DAO.insertar(evento);

@@ -23,9 +23,11 @@ public final class ConexionBD {
     private static String password;
     private static boolean configuracionCargada = false;
 
+    // Constructor privado: clase de utilidad, no se instancia.
     private ConexionBD() {
     }
 
+    // Carga una sola vez las credenciales desde database.properties.
     private static synchronized void cargarConfiguracion() {
         if (configuracionCargada) {
             return;

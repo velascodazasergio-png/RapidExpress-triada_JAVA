@@ -19,6 +19,7 @@ public final class TransaccionUtil {
 
     private static final int MAX_INTENTOS = 3;
 
+    // Constructor privado: clase de utilidad, no se instancia.
     private TransaccionUtil() {
     }
 
@@ -68,6 +69,7 @@ public final class TransaccionUtil {
         return codigo == 1213 || codigo == 1205 || "40001".equals(e.getSQLState());
     }
 
+    // Hace rollback de la conexion, ignorando errores.
     private static void revertir(Connection cn) {
         if (cn != null) {
             try {
@@ -78,6 +80,7 @@ public final class TransaccionUtil {
         }
     }
 
+    // Restaura autocommit y cierra la conexion.
     private static void cerrar(Connection cn) {
         if (cn != null) {
             try {
@@ -88,6 +91,7 @@ public final class TransaccionUtil {
         }
     }
 
+    // Duerme el hilo los milisegundos indicados.
     private static void dormir(long milis) {
         try {
             Thread.sleep(milis);
