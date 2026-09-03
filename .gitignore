@@ -1,5 +1,7 @@
 # Compilados y artefactos de build
 target/
+out/
+lib/
 *.class
 *.jar
 *.war
