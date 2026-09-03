@@ -80,9 +80,13 @@ El modelo tiene siete tablas operativas y una transversal de auditoría.
 
 | Archivo | Contenido |
 |---|---|
-| `database/1_schema_ddl.sql` | Creación de la base de datos, las ocho tablas con sus restricciones, cinco vistas de reporte y cuatro procedimientos almacenados. |
+| `database/1_schema_ddl.sql` | Creación de la base de datos y las ocho tablas base con sus restricciones. |
+| `database/3_schema_reportes_auditoria.sql` | Tabla `auditoria`, cinco vistas de reporte (`v_*`) y cuatro procedimientos almacenados (`sp_*`). Ejecutar después de `1_schema_ddl.sql`. |
 | `database/2_data_dml.sql` | Datos de prueba: más de 20 registros por entidad principal, con estados coherentes entre tablas. |
 | `database/diagrama_entidad_relacion.png` | Diagrama ER. |
+
+Los archivos `*_persona1.sql` / `*_persona2.sql` son los fragmentos por módulo de los que
+se generaron los consolidados; no hace falta ejecutarlos por separado.
 
 Los datos de prueba no son aleatorios entre sí: los vehículos marcados `EN_RUTA` son exactamente los de las rutas `EN_CURSO`, y el estado de cada paquete corresponde al resultado de su asignación en `ruta_paquetes`. Un juego de datos incoherente haría que los reportes mostraran cifras imposibles en la sustentación.
 
@@ -93,27 +97,18 @@ El sistema aplica el patrón **Modelo-Vista-Controlador**:
 ```
 src/main/java/com/rapidexpress/
 ├── Main.java                    Punto de entrada; verifica la conexión y lanza el menú
-├── model/                       Entidades del dominio
-│   ├── Auditoria.java
-│   └── dto/                     Objetos de transferencia para los reportes
-│       ├── EntregaDTO.java
-│       ├── HistorialRutaDTO.java
-│       └── TablaReporte.java
+├── model/                       Entidades del dominio, enums de estado y DTOs de reporte (model/dto/)
 ├── dao/                         Acceso a datos; único punto que habla SQL
-│   ├── AuditoriaDAO.java
-│   └── ReporteDAO.java
-├── controller/                  Validación y reglas de negocio
-│   ├── AuditoriaController.java
-│   └── ReporteController.java
-├── view/                        Interacción por consola
-│   ├── MenuPrincipal.java
-│   ├── ReporteView.java
-│   ├── AuditoriaView.java
-│   └── ConsolaUtil.java
-└── util/                        Infraestructura transversal
-    ├── ConexionBD.java
-    └── AuditLogger.java
+├── service/                     Reglas de negocio y transacciones (Flota, Conductor, Paquete, Ruta)
+├── controller/                  Coordinación entre vista y servicio/DAO
+├── view/                        Interacción por consola (menús + ConsolaUtil)
+├── integracion/                 Contrato de auditoría (AuditoriaGateway) e implementaciones
+├── excepcion/                   NegocioException
+└── util/                        Infraestructura transversal (ConexionBD, TransaccionUtil, AuditLogger)
 ```
+
+Las clases `MainFlotaPruebas`, `MainRutasPruebas`, `PruebaConexion` y `PruebaReglas` son
+utilidades de prueba manual por módulo; el arranque real es siempre `Main`.
 
 El flujo es siempre en un sentido: la vista recoge la entrada del operador y llama al controlador; el controlador valida y delega en el DAO; el DAO ejecuta la consulta y devuelve objetos. La vista nunca abre una conexión y el DAO nunca imprime en pantalla.
 
@@ -139,39 +134,60 @@ Cree una instancia MySQL 8.0 en el proveedor de su elección. Independientemente
 
 ```bash
 cd database
-mysql -h <host> -u <usuario> -p < 1_schema_ddl.sql
-mysql -h <host> -u <usuario> -p < 2_data_dml.sql
+# Opción rápida: un solo archivo con esquema + reportes/auditoría + datos
+mysql -h <host> -u <usuario> -p < 0_instalacion_completa.sql
 ```
 
-Cada script termina imprimiendo un conteo de lo que creó. Si alguna cifra sale en cero, algo falló antes y conviene revisar la salida completa en lugar de continuar.
+O ejecutándolos por separado, **en este orden**:
+
+```bash
+mysql -h <host> -u <usuario> -p < 1_schema_ddl.sql               # 8 tablas base
+mysql -h <host> -u <usuario> -p < 3_schema_reportes_auditoria.sql # tabla auditoria + vistas + procedimientos
+mysql -h <host> -u <usuario> -p < 2_data_dml.sql                  # datos de prueba
+```
+
+El orden importa: `3_schema_reportes_auditoria.sql` necesita las ocho tablas de `1_schema_ddl.sql`, y sin él fallan tanto los reportes como el registro de auditoría en base de datos.
 
 ### 4. Configurar las credenciales
 
 ```bash
-cp src/main/resources/db.properties.example src/main/resources/db.properties
+cp src/main/resources/database.properties.example src/main/resources/database.properties
 ```
 
 Edite el archivo con los datos de su instancia:
 
 ```properties
-db.url=jdbc:mysql://<host>:3306/rapidexpress?useSSL=true&serverTimezone=America/Bogota
+db.url=jdbc:mysql://<host>:3306/rapidexpress?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Bogota&characterEncoding=UTF-8
 db.user=<usuario>
 db.password=<contraseña>
 ```
 
-`db.properties` está en `.gitignore`. Las credenciales no se suben al repositorio.
+`database.properties` está en `.gitignore`. Las credenciales no se suben al repositorio.
 
 ### 5. Compilar y ejecutar
+
+**Opción A · con Maven** (necesita Maven 3.8+ instalado):
 
 ```bash
 mvn clean package
 mvn exec:java
+# o, desde el artefacto generado:
+java -jar target/rapidexpress-management-system-1.0.0.jar
 ```
 
-O bien, desde el artefacto generado:
+**Opción B · sin Maven** (solo requiere un JDK 17+). Los scripts descargan el conector
+MySQL a `lib/`, compilan y arrancan la aplicación:
+
+```powershell
+# Windows (PowerShell)
+.\run.ps1              # compila y ejecuta
+.\run.ps1 -Package     # además genera target\rapidexpress.jar
+```
 
 ```bash
-java -jar target/rapidexpress-management-system-1.0.0.jar
+# Linux / macOS
+./run.sh
+./run.sh --package
 ```
 
 ## Guía de uso
