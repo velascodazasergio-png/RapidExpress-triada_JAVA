@@ -99,6 +99,7 @@ public class AuditoriaDAO {
         }
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private List<Auditoria> mapear(ResultSet rs) throws SQLException {
         List<Auditoria> lista = new ArrayList<>();
         while (rs.next()) {

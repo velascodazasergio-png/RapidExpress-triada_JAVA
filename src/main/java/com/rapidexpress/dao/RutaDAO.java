@@ -25,6 +25,7 @@ public class RutaDAO {
           + "JOIN vehiculos v   ON v.id_vehiculo  = r.id_vehiculo "
           + "JOIN conductores c ON c.id_conductor = r.id_conductor ";
 
+    // Inserta el registro y devuelve su id generado.
     public int insertar(Connection cn, Ruta r) throws SQLException {
         String sql = "INSERT INTO rutas (codigo, fecha, id_vehiculo, id_conductor, estado, observaciones) "
                    + "VALUES (?,?,?,?,?,?)";
@@ -45,6 +46,7 @@ public class RutaDAO {
         return r.getIdRuta();
     }
 
+    // Anade un paquete a una ruta con su orden de entrega.
     public void agregarPaquete(Connection cn, int idRuta, int idPaquete, int ordenEntrega) throws SQLException {
         String sql = "INSERT INTO ruta_paquetes (id_ruta, id_paquete, orden_entrega) VALUES (?,?,?)";
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -55,6 +57,7 @@ public class RutaDAO {
         }
     }
 
+    // Busca un registro por su id.
     public Ruta buscarPorId(Connection cn, int idRuta) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "WHERE r.id_ruta = ?")) {
             ps.setInt(1, idRuta);
@@ -64,6 +67,7 @@ public class RutaDAO {
         }
     }
 
+    // Busca por codigo de seguimiento.
     public Ruta buscarPorCodigo(Connection cn, String codigo) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "WHERE r.codigo = ?")) {
             ps.setString(1, codigo);
@@ -83,6 +87,7 @@ public class RutaDAO {
         }
     }
 
+    // Lista los registros filtrados por estado.
     public List<Ruta> listarPorEstado(Connection cn, EstadoRuta estado) throws SQLException {
         List<Ruta> rutas = new ArrayList<>();
         try (PreparedStatement ps = cn.prepareStatement(
@@ -97,6 +102,7 @@ public class RutaDAO {
         return rutas;
     }
 
+    // Lista las rutas de una fecha.
     public List<Ruta> listarPorFecha(Connection cn, LocalDate fecha) throws SQLException {
         List<Ruta> rutas = new ArrayList<>();
         try (PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "WHERE r.fecha = ? ORDER BY r.id_ruta")) {
@@ -201,6 +207,7 @@ public class RutaDAO {
         }
     }
 
+    // Cuenta los paquetes de la ruta sin entregar ni devolver.
     public int contarPaquetesPendientes(Connection cn, int idRuta) throws SQLException {
         String sql = "SELECT COUNT(*) FROM ruta_paquetes rp JOIN paquetes p ON p.id_paquete = rp.id_paquete "
                    + "WHERE rp.id_ruta = ? AND p.estado NOT IN ('Entregado','Devuelto')";
@@ -212,6 +219,7 @@ public class RutaDAO {
         }
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private Ruta mapear(ResultSet rs) throws SQLException {
         Ruta r = mapearSimple(rs);
         r.setPlacaVehiculo(rs.getString("placa_vehiculo"));
@@ -220,6 +228,7 @@ public class RutaDAO {
         return r;
     }
 
+    // Convierte la fila del ResultSet sin los campos traidos por JOIN.
     private Ruta mapearSimple(ResultSet rs) throws SQLException {
         Ruta r = new Ruta();
         r.setIdRuta(rs.getInt("id_ruta"));

@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class ClienteDAO {
 
+    // Inserta el registro y devuelve su id generado.
     public int insertar(Connection cn, Cliente c) throws SQLException {
         String sql = "INSERT INTO clientes (documento, nombre, telefono, email, direccion, ciudad) "
                    + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -38,6 +39,7 @@ public class ClienteDAO {
         return c.getIdCliente();
     }
 
+    // Busca un registro por su id.
     public Cliente buscarPorId(Connection cn, int idCliente) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement("SELECT * FROM clientes WHERE id_cliente = ?")) {
             ps.setInt(1, idCliente);
@@ -47,6 +49,7 @@ public class ClienteDAO {
         }
     }
 
+    // Busca un cliente por su documento.
     public Cliente buscarPorDocumento(Connection cn, String documento) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement("SELECT * FROM clientes WHERE documento = ?")) {
             ps.setString(1, documento);
@@ -56,6 +59,7 @@ public class ClienteDAO {
         }
     }
 
+    // Lista todos los registros.
     public List<Cliente> listar(Connection cn) throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
         try (PreparedStatement ps = cn.prepareStatement("SELECT * FROM clientes ORDER BY nombre");
@@ -67,6 +71,7 @@ public class ClienteDAO {
         return clientes;
     }
 
+    // Actualiza el registro; devuelve si cambio alguna fila.
     public boolean actualizar(Connection cn, Cliente c) throws SQLException {
         String sql = "UPDATE clientes SET documento = ?, nombre = ?, telefono = ?, email = ?, "
                    + "direccion = ?, ciudad = ? WHERE id_cliente = ?";
@@ -82,6 +87,7 @@ public class ClienteDAO {
         }
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private Cliente mapear(ResultSet rs) throws SQLException {
         Cliente c = new Cliente();
         c.setIdCliente(rs.getInt("id_cliente"));

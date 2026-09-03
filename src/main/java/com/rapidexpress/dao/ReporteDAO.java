@@ -104,21 +104,25 @@ public class ReporteDAO {
                 "SELECT * FROM v_estado_flota ORDER BY estado_vehiculo, placa");
     }
 
+    // Devuelve el reporte de desempeno de conductores.
     public TablaReporte desempenoConductores() throws SQLException {
         return consultarVista("DESEMPEÑO DE CONDUCTORES",
                 "SELECT * FROM v_desempeno_conductores ORDER BY paquetes_entregados DESC");
     }
 
+    // Devuelve el reporte de ocupacion de rutas.
     public TablaReporte ocupacionRutas() throws SQLException {
         return consultarVista("OCUPACIÓN DE RUTAS",
                 "SELECT * FROM v_ocupacion_rutas ORDER BY fecha_programada DESC");
     }
 
+    // Devuelve el reporte de paquetes por estado.
     public TablaReporte paquetesPorEstado() throws SQLException {
         return consultarVista("PAQUETES POR ESTADO",
                 "SELECT * FROM v_paquetes_por_estado ORDER BY cantidad DESC");
     }
 
+    // Devuelve el reporte de actividad de auditoria.
     public TablaReporte actividadAuditoria() throws SQLException {
         return consultarVista("ACTIVIDAD REGISTRADA",
                 "SELECT * FROM v_actividad_auditoria ORDER BY dia DESC, eventos DESC LIMIT 50");
@@ -135,6 +139,7 @@ public class ReporteDAO {
         }
     }
 
+    // Ejecuta una vista de solo lectura y la devuelve como tabla.
     private TablaReporte consultarVista(String titulo, String sql) throws SQLException {
         try (Connection cn = ConexionBD.obtenerConexion();
              PreparedStatement ps = cn.prepareStatement(sql);

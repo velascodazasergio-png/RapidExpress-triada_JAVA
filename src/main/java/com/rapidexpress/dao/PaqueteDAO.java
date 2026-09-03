@@ -21,6 +21,7 @@ public class PaqueteDAO {
           + "JOIN clientes r ON r.id_cliente = p.id_remitente "
           + "JOIN clientes d ON d.id_cliente = p.id_destinatario ";
 
+    // Inserta el registro y devuelve su id generado.
     public int insertar(Connection cn, Paquete p) throws SQLException {
         String sql = "INSERT INTO paquetes (codigo_seguimiento, descripcion, peso_kg, largo_cm, ancho_cm, alto_cm, "
                    + "id_remitente, id_destinatario, direccion_origen, ciudad_origen, direccion_destino, "
@@ -49,6 +50,7 @@ public class PaqueteDAO {
         return p.getIdPaquete();
     }
 
+    // Busca un registro por su id.
     public Paquete buscarPorId(Connection cn, int idPaquete) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "WHERE p.id_paquete = ?")) {
             ps.setInt(1, idPaquete);
@@ -58,6 +60,7 @@ public class PaqueteDAO {
         }
     }
 
+    // Busca por codigo de seguimiento.
     public Paquete buscarPorCodigo(Connection cn, String codigo) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "WHERE p.codigo_seguimiento = ?")) {
             ps.setString(1, codigo);
@@ -81,14 +84,17 @@ public class PaqueteDAO {
         }
     }
 
+    // Lista todos los registros.
     public List<Paquete> listar(Connection cn) throws SQLException {
         return consultar(cn, SELECT_BASE + "ORDER BY p.id_paquete DESC", null);
     }
 
+    // Lista los registros filtrados por estado.
     public List<Paquete> listarPorEstado(Connection cn, EstadoPaquete estado) throws SQLException {
         return consultar(cn, SELECT_BASE + "WHERE p.estado = ? ORDER BY p.id_paquete", estado.getEtiqueta());
     }
 
+    // Lista los paquetes de una ruta, en orden de entrega.
     public List<Paquete> listarPorRuta(Connection cn, int idRuta) throws SQLException {
         String sql = SELECT_BASE
                    + "JOIN ruta_paquetes rp ON rp.id_paquete = p.id_paquete "
@@ -144,6 +150,7 @@ public class PaqueteDAO {
         }
     }
 
+    // Indica si ya existe un paquete con ese codigo.
     public boolean existeCodigo(Connection cn, String codigo) throws SQLException {
         try (PreparedStatement ps = cn.prepareStatement(
                 "SELECT 1 FROM paquetes WHERE codigo_seguimiento = ?")) {
@@ -154,6 +161,7 @@ public class PaqueteDAO {
         }
     }
 
+    // Ejecuta la consulta y devuelve la lista de resultados.
     private List<Paquete> consultar(Connection cn, String sql, String parametro) throws SQLException {
         List<Paquete> paquetes = new ArrayList<>();
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -169,6 +177,7 @@ public class PaqueteDAO {
         return paquetes;
     }
 
+    // Convierte la fila actual del ResultSet en un objeto.
     private Paquete mapear(ResultSet rs) throws SQLException {
         Paquete p = mapearSimple(rs);
         p.setNombreRemitente(rs.getString("nombre_remitente"));
@@ -176,6 +185,7 @@ public class PaqueteDAO {
         return p;
     }
 
+    // Convierte la fila del ResultSet sin los campos traidos por JOIN.
     private Paquete mapearSimple(ResultSet rs) throws SQLException {
         Paquete p = new Paquete();
         p.setIdPaquete(rs.getInt("id_paquete"));
