@@ -55,7 +55,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *  2. Bloqueo pesimista con SELECT ... FOR UPDATE. Orden fijo de bloqueo:
  *     ruta -> vehiculo -> conductor -> paquetes por id ASCENDENTE. Bloquear
  *     siempre en el mismo orden es lo que evita los deadlocks entre terminales.
- *  3. Escritura condicional: los UPDATE llevan "AND estado = <esperado>" y se
+ *  3. Escritura condicional: los UPDATE llevan "AND estado = &lt;esperado&gt;" y se
  *     revisa cuantas filas cambiaron. Si es 0, otra terminal gano la carrera y
  *     la operacion se aborta completa.
  *  4. El cambio de estado de la flota (iniciar/cerrar ruta) entra en la MISMA

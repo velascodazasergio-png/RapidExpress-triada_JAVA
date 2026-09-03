@@ -23,7 +23,7 @@ import java.sql.Statement;
  *
  * Crea datos con un sufijo aleatorio y los borra al terminar.
  *
- * >>> ESTA CLASE SE ELIMINA EN EL MERGE FINAL <<<
+ * IMPORTANTE: esta clase se elimina en el merge final.
  */
 public class PruebaReglas {
 

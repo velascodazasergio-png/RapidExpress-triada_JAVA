@@ -6,7 +6,7 @@ import com.rapidexpress.util.ConexionBD;
  * Punto de control minimo: verifica que Java puede conectarse a la base de datos.
  * Debe imprimir "true". Si imprime "false", nada del resto del modulo funcionara.
  *
- * >>> ESTA CLASE SE ELIMINA EN EL MERGE FINAL <<<
+ * IMPORTANTE: esta clase se elimina en el merge final.
  */
 public class PruebaConexion {
 

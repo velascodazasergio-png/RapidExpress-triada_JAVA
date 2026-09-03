@@ -9,7 +9,7 @@ import com.rapidexpress.view.RutaMenuView;
  * Main TEMPORAL para probar el modulo de la Persona 2 (paquetes y rutas)
  * junto con el de la Persona 1.
  *
- * >>> ESTA CLASE SE ELIMINA EN EL MERGE FINAL <<<
+ * IMPORTANTE: esta clase se elimina en el merge final.
  * El Main definitivo lo aporta la Persona 3 (integracion).
  */
 public class MainRutasPruebas {
