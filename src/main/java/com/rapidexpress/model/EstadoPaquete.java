@@ -26,6 +26,11 @@ public enum EstadoPaquete {
         return etiqueta;
     }
 
+    /**
+     * Convierte la etiqueta guardada en la BD ("En Bodega", "En Transito"...) al enum.
+     *
+     * @throws IllegalArgumentException si la etiqueta no corresponde a ningun estado
+     */
     public static EstadoPaquete desdeEtiqueta(String etiqueta) {
         for (EstadoPaquete e : values()) {
             if (e.etiqueta.equalsIgnoreCase(etiqueta)) {
@@ -49,6 +54,7 @@ public enum EstadoPaquete {
         }
     }
 
+    /** Estados terminales del ciclo de vida: Entregado o Devuelto. */
     public boolean esFinal() {
         return this == ENTREGADO || this == DEVUELTO;
     }

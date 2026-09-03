@@ -49,6 +49,7 @@ public class Asignacion {
     public String getPlacaVehiculo() { return placaVehiculo; }
     public void setPlacaVehiculo(String placaVehiculo) { this.placaVehiculo = placaVehiculo; }
 
+    /** {@code true} mientras la asignacion no se haya cerrado (sin fecha de fin). */
     public boolean estaVigente() { return fechaFin == null; }
 
     @Override

@@ -17,6 +17,11 @@ public enum EstadoVehiculo {
         return etiqueta;
     }
 
+    /**
+     * Convierte la etiqueta guardada en la BD ("Disponible", "En Ruta"...) al enum.
+     *
+     * @throws IllegalArgumentException si la etiqueta no corresponde a ningun estado
+     */
     public static EstadoVehiculo desdeEtiqueta(String etiqueta) {
         for (EstadoVehiculo e : values()) {
             if (e.etiqueta.equalsIgnoreCase(etiqueta)) {

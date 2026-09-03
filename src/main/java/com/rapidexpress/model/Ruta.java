@@ -32,6 +32,7 @@ public class Ruta {
     private String nombreConductor;
     private BigDecimal capacidadVehiculoKg;
 
+    /** Suma del peso de los paquetes actualmente cargados en la ruta. */
     public BigDecimal getPesoTotalKg() {
         BigDecimal total = BigDecimal.ZERO;
         for (Paquete p : paquetes) {

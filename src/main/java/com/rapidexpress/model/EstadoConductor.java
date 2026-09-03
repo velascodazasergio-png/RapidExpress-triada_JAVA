@@ -23,6 +23,11 @@ public enum EstadoConductor {
         return etiqueta;
     }
 
+    /**
+     * Convierte la etiqueta guardada en la BD ("Activo", "En Ruta"...) al enum.
+     *
+     * @throws IllegalArgumentException si la etiqueta no corresponde a ningun estado
+     */
     public static EstadoConductor desdeEtiqueta(String etiqueta) {
         for (EstadoConductor e : values()) {
             if (e.etiqueta.equalsIgnoreCase(etiqueta)) {

@@ -17,6 +17,11 @@ public class Mantenimiento {
 
         public String getEtiqueta() { return etiqueta; }
 
+        /**
+         * Convierte la etiqueta guardada en la BD ("Preventivo"/"Correctivo") al enum.
+         *
+         * @throws IllegalArgumentException si la etiqueta no es valida
+         */
         public static Tipo desdeEtiqueta(String etiqueta) {
             for (Tipo t : values()) {
                 if (t.etiqueta.equalsIgnoreCase(etiqueta)) return t;
@@ -65,6 +70,7 @@ public class Mantenimiento {
     public String getTaller() { return taller; }
     public void setTaller(String taller) { this.taller = taller; }
 
+    /** {@code true} mientras el mantenimiento no tenga fecha de finalizacion. */
     public boolean estaAbierto() { return fechaFin == null; }
 
     @Override
