@@ -239,6 +239,10 @@ public class FlotaService {
             throw new NegocioException("El vehiculo " + v.getPlaca() + " no tiene conductor asignado.");
         }
         Conductor c = conductorDAO.buscarPorIdBloqueando(cn, asignacion.getIdConductor());
+        if (c == null) {
+            throw new NegocioException("La asignacion del vehiculo " + v.getPlaca()
+                    + " apunta a un conductor que ya no existe.");
+        }
         if (c.getEstado() != EstadoConductor.ACTIVO) {
             throw new NegocioException("El conductor " + c.getNombreCompleto() + " no esta Activo (esta " + c.getEstado() + ").");
         }
