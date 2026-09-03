@@ -3,6 +3,7 @@ package com.rapidexpress.util;
 import com.rapidexpress.dao.AuditoriaDAO;
 import com.rapidexpress.model.Auditoria;
 
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
