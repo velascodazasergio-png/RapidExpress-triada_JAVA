@@ -22,13 +22,38 @@ public final class TransaccionUtil {
     private TransaccionUtil() {
     }
 
+    /**
+     * Trabajo a ejecutar dentro de la transaccion. Recibe la conexion ya
+     * configurada (autocommit desactivado, aislamiento READ COMMITTED) y NO debe
+     * hacer commit, rollback ni cerrarla: de eso se encarga {@link #ejecutar}.
+     *
+     * @param <T> tipo del resultado que devuelve la operacion
+     */
     @FunctionalInterface
     public interface Bloque<T> {
+        /**
+         * @param cn conexion en curso, dentro de la transaccion
+         * @return el resultado de la operacion (puede ser {@code null})
+         * @throws SQLException     si falla una sentencia; provoca rollback
+         * @throws NegocioException si una regla de negocio se incumple; provoca rollback
+         */
         T ejecutar(Connection cn) throws SQLException, NegocioException;
     }
 
     /**
-     * @param descripcion texto corto para el mensaje de error ("crear la ruta")
+     * Ejecuta {@code bloque} dentro de una transaccion: si termina sin excepcion
+     * hace commit y devuelve su resultado; si lanza cualquier excepcion hace
+     * rollback. Ante un conflicto de bloqueo de MySQL (deadlock 1213 o lock wait
+     * timeout 1205) reintenta hasta {@value #MAX_INTENTOS} veces con una espera
+     * creciente antes de rendirse.
+     *
+     * @param descripcion texto corto que se inserta en el mensaje de error
+     *                    ("crear la ruta", "iniciar la ruta"...)
+     * @param bloque      operacion a ejecutar; ver {@link Bloque}
+     * @param <T>         tipo del resultado
+     * @return el valor devuelto por {@code bloque} tras el commit
+     * @throws NegocioException si el bloque incumple una regla de negocio o si
+     *                          el error de base de datos persiste tras los reintentos
      */
     public static <T> T ejecutar(String descripcion, Bloque<T> bloque) throws NegocioException {
         SQLException ultimoError = null;

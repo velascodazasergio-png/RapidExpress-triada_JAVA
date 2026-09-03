@@ -8,11 +8,15 @@ import java.util.Properties;
 
 /**
  * Fabrica centralizada de conexiones JDBC hacia la base de datos MySQL
- * alojada en la nube. Lee las credenciales de src/main/resources/database.properties
+ * alojada en la nube. Lee las credenciales de
+ * {@code src/main/resources/database.properties} (que esta en {@code .gitignore})
  * para no dejarlas escritas dentro del codigo fuente.
  *
- * NOTA DE INTEGRACION: esta clase es compartida por los tres modulos.
- * Se debe fusionar una sola vez en develop; los demas modulos solo la usan.
+ * <p>La configuracion se carga una sola vez, de forma perezosa y sincronizada,
+ * la primera vez que alguien pide una conexion.</p>
+ *
+ * <p>NOTA DE INTEGRACION: esta clase es compartida por los tres modulos; existe
+ * una unica copia y los demas modulos solo la consumen.</p>
  */
 public final class ConexionBD {
 
@@ -48,13 +52,25 @@ public final class ConexionBD {
         configuracionCargada = true;
     }
 
-    /** Devuelve una conexion nueva. Quien la pide es responsable de cerrarla (try-with-resources). */
+    /**
+     * Devuelve una conexion nueva. Quien la pide es responsable de cerrarla,
+     * idealmente con try-with-resources.
+     *
+     * @return una conexion JDBC recien abierta
+     * @throws SQLException           si no se puede establecer la conexion
+     * @throws IllegalStateException  si falta o no se puede leer {@code database.properties}
+     */
     public static Connection obtenerConexion() throws SQLException {
         cargarConfiguracion();
         return DriverManager.getConnection(url, usuario, password);
     }
 
-    /** Prueba rapida de conectividad, util al arrancar la aplicacion. */
+    /**
+     * Prueba rapida de conectividad, util al arrancar la aplicacion. No propaga
+     * excepciones: imprime el error en {@code System.err} y devuelve {@code false}.
+     *
+     * @return {@code true} si se pudo abrir y la conexion quedo utilizable
+     */
     public static boolean probarConexion() {
         try (Connection cn = obtenerConexion()) {
             return cn != null && !cn.isClosed();
