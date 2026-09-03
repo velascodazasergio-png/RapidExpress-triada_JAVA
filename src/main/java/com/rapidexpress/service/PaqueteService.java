@@ -41,16 +41,19 @@ public class PaqueteService {
         this(null);
     }
 
+    // Constructor con gateway de auditoria explicito (para pruebas).
     public PaqueteService(AuditoriaGateway auditoria) {
         this.auditoria = auditoria;
     }
 
+    // Devuelve el gateway de auditoria a usar.
     private AuditoriaGateway auditoria() {
         return auditoria != null ? auditoria : Auditoria.actual();
     }
 
     // ================================================================= ALTAS
 
+    // Registra un paquete nuevo.
     public Paquete registrarPaquete(Paquete paquete) throws NegocioException {
         validarDatos(paquete);
 
@@ -74,6 +77,7 @@ public class PaqueteService {
         return guardado;
     }
 
+    // Registra un cliente nuevo.
     public Cliente registrarCliente(Cliente cliente) throws NegocioException {
         if (cliente.getNombre() == null || cliente.getNombre().isBlank()) {
             throw new NegocioException("El nombre del cliente es obligatorio.");
@@ -92,6 +96,7 @@ public class PaqueteService {
 
     // ============================================================= CONSULTAS
 
+    // Busca un paquete por su codigo de seguimiento.
     public Paquete rastrear(String codigoSeguimiento) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             Paquete paquete = paqueteDAO.buscarPorCodigo(cn, codigoSeguimiento.trim().toUpperCase());
@@ -104,6 +109,7 @@ public class PaqueteService {
         }
     }
 
+    // Lista todos los registros ordenados.
     public List<Paquete> listarTodos() throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return paqueteDAO.listar(cn);
@@ -112,6 +118,7 @@ public class PaqueteService {
         }
     }
 
+    // Lista los registros filtrados por estado.
     public List<Paquete> listarPorEstado(EstadoPaquete estado) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return paqueteDAO.listarPorEstado(cn, estado);
@@ -120,6 +127,7 @@ public class PaqueteService {
         }
     }
 
+    // Lista todos los clientes.
     public List<Cliente> listarClientes() throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return clienteDAO.listar(cn);
@@ -185,6 +193,7 @@ public class PaqueteService {
 
     // ================================================================= APOYO
 
+    // Valida los datos obligatorios; lanza NegocioException si algo falla.
     private void validarDatos(Paquete p) throws NegocioException {
         if (p.getDescripcion() == null || p.getDescripcion().isBlank()) {
             throw new NegocioException("La descripcion del paquete es obligatoria.");
@@ -204,6 +213,7 @@ public class PaqueteService {
         }
     }
 
+    // Indica si un valor decimal es negativo.
     private boolean menorQueCero(BigDecimal valor) {
         return valor != null && valor.compareTo(BigDecimal.ZERO) < 0;
     }

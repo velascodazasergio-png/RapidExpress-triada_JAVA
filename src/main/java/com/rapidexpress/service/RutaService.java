@@ -78,10 +78,12 @@ public class RutaService {
         this(null);
     }
 
+    // Constructor con gateway de auditoria explicito (para pruebas).
     public RutaService(AuditoriaGateway auditoria) {
         this.auditoria = auditoria;
     }
 
+    // Devuelve el gateway de auditoria a usar.
     private AuditoriaGateway auditoria() {
         return auditoria != null ? auditoria : Auditoria.actual();
     }
@@ -271,6 +273,7 @@ public class RutaService {
         moverPaqueteEnTransito(codigoSeguimiento, EstadoPaquete.DEVUELTO, "DEVOLVER_PAQUETE");
     }
 
+    // Mueve un paquete En Transito al estado destino, en una transaccion.
     private void moverPaqueteEnTransito(String codigo, EstadoPaquete destino, String accion)
             throws NegocioException {
         String codigoNormalizado = codigo.trim().toUpperCase();
@@ -357,10 +360,12 @@ public class RutaService {
 
     // ============================================================ CONSULTAS
 
+    // Lista las rutas En Curso.
     public List<Ruta> listarRutasActivas() throws NegocioException {
         return listarRutasPorEstado(EstadoRuta.EN_CURSO);
     }
 
+    // Lista las rutas que estan en un estado.
     public List<Ruta> listarRutasPorEstado(EstadoRuta estado) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             List<Ruta> rutas = rutaDAO.listarPorEstado(cn, estado);
@@ -373,6 +378,7 @@ public class RutaService {
         }
     }
 
+    // Devuelve una ruta junto con sus paquetes.
     public Ruta consultarRutaConPaquetes(int idRuta) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             Ruta ruta = rutaDAO.buscarPorId(cn, idRuta);
@@ -398,12 +404,14 @@ public class RutaService {
         return operativos;
     }
 
+    // Devuelve el conductor asignado a un vehiculo.
     public Conductor conductorDe(int idVehiculo) throws NegocioException {
         return conductorController.obtenerConductorAsignadoA(idVehiculo);
     }
 
     // ================================================================ APOYO
 
+    // Genera un codigo unico para la hoja de ruta.
     private String generarCodigoRuta(Connection cn, LocalDate fecha) throws SQLException, NegocioException {
         for (int intento = 0; intento < 10; intento++) {
             String codigo = "RUT-" + fecha.format(FORMATO_CODIGO) + "-"
