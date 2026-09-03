@@ -20,6 +20,7 @@ public class FlotaMenuView {
 
     private final FlotaController controlador = new FlotaController();
 
+    // Muestra el menu y procesa las opciones del usuario.
     public void mostrar() {
         boolean salir = false;
         while (!salir) {
@@ -62,6 +63,7 @@ public class FlotaMenuView {
         }
     }
 
+    // Pide los datos por consola y registra el registro.
     private void registrar() throws NegocioException {
         ConsolaUtil.titulo("Registrar vehiculo");
         String placa = ConsolaUtil.leerTexto("Placa (ABC123)");
@@ -73,17 +75,20 @@ public class FlotaMenuView {
         ConsolaUtil.exito("Vehiculo registrado con id " + id + ".");
     }
 
+    // Lista todos los vehiculos en consola.
     private void listarTodos() throws NegocioException {
         ConsolaUtil.titulo("Vehiculos registrados");
         imprimir(controlador.listarVehiculos());
     }
 
+    // Pide un estado y lista los vehiculos en ese estado.
     private void listarPorEstado() throws NegocioException {
         EstadoVehiculo estado = seleccionarEstado();
         ConsolaUtil.titulo("Vehiculos en estado " + estado);
         imprimir(controlador.listarVehiculosPorEstado(estado));
     }
 
+    // Pide una placa y muestra el vehiculo.
     private void consultarPorPlaca() throws NegocioException {
         String placa = ConsolaUtil.leerTexto("Placa");
         Vehiculo v = controlador.buscarVehiculoPorPlaca(placa);
@@ -94,6 +99,7 @@ public class FlotaMenuView {
         }
     }
 
+    // Pide los nuevos datos y actualiza un vehicul.
     private void actualizar() throws NegocioException {
         int id = ConsolaUtil.leerEntero("Id del vehiculo a actualizar");
         Vehiculo v = controlador.buscarVehiculo(id);
@@ -111,6 +117,7 @@ public class FlotaMenuView {
         ConsolaUtil.exito("Vehiculo actualizado.");
     }
 
+    // Pide un estado y lo aplica a un vehicul.
     private void cambiarEstado() throws NegocioException {
         int id = ConsolaUtil.leerEntero("Id del vehiculo");
         EstadoVehiculo estado = seleccionarEstado();
@@ -118,6 +125,7 @@ public class FlotaMenuView {
         ConsolaUtil.exito("Estado actualizado a " + estado + ".");
     }
 
+    // Pide los datos y registra un mantenimiento.
     private void registrarMantenimiento() throws NegocioException {
         ConsolaUtil.titulo("Registrar mantenimiento");
         int idVehiculo = ConsolaUtil.leerEntero("Id del vehiculo");
@@ -131,6 +139,7 @@ public class FlotaMenuView {
         ConsolaUtil.exito("Mantenimiento " + id + " registrado. El vehiculo quedo En Mantenimiento.");
     }
 
+    // Muestra los mantenimientos abiertos y finaliza uno.
     private void finalizarMantenimiento() throws NegocioException {
         ConsolaUtil.titulo("Mantenimientos en curso");
         List<Mantenimiento> abiertos = controlador.listarMantenimientosAbiertos();
@@ -146,6 +155,7 @@ public class FlotaMenuView {
         ConsolaUtil.exito("Mantenimiento finalizado. El vehiculo volvio a Disponible.");
     }
 
+    // Pide un vehiculo y muestra su historial de mantenimientos.
     private void historialMantenimientos() throws NegocioException {
         int idVehiculo = ConsolaUtil.leerEntero("Id del vehiculo");
         List<Mantenimiento> historial = controlador.historialMantenimientos(idVehiculo);
@@ -157,6 +167,7 @@ public class FlotaMenuView {
         historial.forEach(m -> ConsolaUtil.info(m.toString()));
     }
 
+    // Pide un id, confirma y elimina un vehicul.
     private void eliminar() throws NegocioException {
         int id = ConsolaUtil.leerEntero("Id del vehiculo a eliminar");
         if (ConsolaUtil.confirmar("Esta seguro? Se borrara tambien su historial de mantenimientos")) {
@@ -167,6 +178,7 @@ public class FlotaMenuView {
         }
     }
 
+    // Pide el estado desde un menu numerico.
     private EstadoVehiculo seleccionarEstado() {
         System.out.println("  1. Disponible   2. En Ruta   3. En Mantenimiento");
         return switch (ConsolaUtil.leerEntero("Estado")) {
@@ -176,6 +188,7 @@ public class FlotaMenuView {
         };
     }
 
+    // Imprime la lista en consola con su total.
     private void imprimir(List<Vehiculo> vehiculos) {
         if (vehiculos.isEmpty()) {
             ConsolaUtil.info("No hay vehiculos que mostrar.");

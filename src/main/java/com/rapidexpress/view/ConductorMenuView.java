@@ -18,6 +18,7 @@ public class ConductorMenuView {
     private final ConductorController controlador = new ConductorController();
     private final FlotaController flotaController = new FlotaController();
 
+    // Muestra el menu y procesa las opciones del usuario.
     public void mostrar() {
         boolean salir = false;
         while (!salir) {
@@ -60,6 +61,7 @@ public class ConductorMenuView {
         }
     }
 
+    // Pide los datos por consola y registra el registro.
     private void registrar() throws NegocioException {
         ConsolaUtil.titulo("Registrar conductor");
         String identificacion = ConsolaUtil.leerTexto("Numero de identificacion");
@@ -70,17 +72,20 @@ public class ConductorMenuView {
         ConsolaUtil.exito("Conductor registrado con id " + id + ".");
     }
 
+    // Lista todos los conductores en consola.
     private void listarTodos() throws NegocioException {
         ConsolaUtil.titulo("Conductores registrados");
         imprimir(controlador.listarConductores());
     }
 
+    // Pide un estado y lista los conductores en ese estado.
     private void listarPorEstado() throws NegocioException {
         EstadoConductor estado = seleccionarEstado(true);
         ConsolaUtil.titulo("Conductores en estado " + estado);
         imprimir(controlador.listarConductoresPorEstado(estado));
     }
 
+    // Pide una identificacion y muestra el conductor.
     private void consultarPorIdentificacion() throws NegocioException {
         String identificacion = ConsolaUtil.leerTexto("Identificacion");
         Conductor c = controlador.buscarConductorPorIdentificacion(identificacion);
@@ -91,6 +96,7 @@ public class ConductorMenuView {
         }
     }
 
+    // Pide los nuevos datos y actualiza un conductore.
     private void actualizar() throws NegocioException {
         int id = ConsolaUtil.leerEntero("Id del conductor a actualizar");
         Conductor c = controlador.buscarConductor(id);
@@ -107,6 +113,7 @@ public class ConductorMenuView {
         ConsolaUtil.exito("Conductor actualizado.");
     }
 
+    // Pide un estado y lo aplica a un conductore.
     private void cambiarEstado() throws NegocioException {
         int id = ConsolaUtil.leerEntero("Id del conductor");
         EstadoConductor estado = seleccionarEstado(false);
@@ -114,6 +121,7 @@ public class ConductorMenuView {
         ConsolaUtil.exito("Estado actualizado a " + estado + ".");
     }
 
+    // Pide conductor y vehiculo y crea la asignacion.
     private void asignar() throws NegocioException {
         ConsolaUtil.titulo("Asignar conductor a vehiculo");
         ConsolaUtil.info("Conductores activos:");
@@ -129,12 +137,14 @@ public class ConductorMenuView {
         ConsolaUtil.exito("Asignacion creada correctamente.");
     }
 
+    // Pide un conductor y libera su asignacion.
     private void liberar() throws NegocioException {
         int idConductor = ConsolaUtil.leerEntero("Id del conductor");
         controlador.liberarAsignacion(idConductor);
         ConsolaUtil.exito("Asignacion liberada.");
     }
 
+    // Muestra las asignaciones vigentes.
     private void listarAsignaciones() throws NegocioException {
         ConsolaUtil.titulo("Asignaciones vigentes");
         List<Asignacion> vigentes = controlador.listarAsignacionesVigentes();
@@ -146,6 +156,7 @@ public class ConductorMenuView {
         ConsolaUtil.info("Total: " + vigentes.size());
     }
 
+    // Pide un id, confirma y elimina un conductore.
     private void eliminar() throws NegocioException {
         int id = ConsolaUtil.leerEntero("Id del conductor a eliminar");
         if (ConsolaUtil.confirmar("Confirma la eliminacion")) {
@@ -156,6 +167,7 @@ public class ConductorMenuView {
         }
     }
 
+    // Pide y valida el tipo de licencia.
     private TipoLicencia seleccionarLicencia() {
         ConsolaUtil.info("Categorias: A1 A2 B1 B2 B3 C1 C2 C3");
         while (true) {
@@ -178,6 +190,7 @@ public class ConductorMenuView {
         };
     }
 
+    // Imprime la lista en consola con su total.
     private void imprimir(List<Conductor> conductores) {
         if (conductores.isEmpty()) {
             ConsolaUtil.info("No hay conductores que mostrar.");
