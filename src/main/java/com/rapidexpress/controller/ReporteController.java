@@ -20,6 +20,7 @@ public class ReporteController {
 
     private final ReporteDAO dao;
 
+    // Constructor por defecto: crea su propio DAO.
     public ReporteController() {
         this(new ReporteDAO());
     }
@@ -77,18 +78,22 @@ public class ReporteController {
         return dao.estadoFlota();
     }
 
+    // Devuelve el reporte de desempeno de conductores.
     public TablaReporte desempenoConductores() throws SQLException {
         return dao.desempenoConductores();
     }
 
+    // Devuelve el reporte de ocupacion de rutas.
     public TablaReporte ocupacionRutas() throws SQLException {
         return dao.ocupacionRutas();
     }
 
+    // Devuelve el reporte de paquetes por estado.
     public TablaReporte paquetesPorEstado() throws SQLException {
         return dao.paquetesPorEstado();
     }
 
+    // Devuelve el reporte de seguimiento de un paquete.
     public TablaReporte seguimientoPaquete(String codigo) throws SQLException {
         if (codigo == null || codigo.isBlank()) {
             throw new IllegalArgumentException("Debe indicar el código de seguimiento.");
