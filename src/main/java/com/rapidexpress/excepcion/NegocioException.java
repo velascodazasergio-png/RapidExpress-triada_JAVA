@@ -7,6 +7,8 @@ package com.rapidexpress.excepcion;
  */
 public class NegocioException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
     // Crea la excepcion con un mensaje para el usuario.
     public NegocioException(String mensaje) {
         super(mensaje);

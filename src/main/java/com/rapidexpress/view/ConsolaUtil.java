@@ -81,13 +81,13 @@ public final class ConsolaUtil {
                 ancho[i] = Math.max(ancho[i], largo);
             }
         }
-        StringBuilder separador = new StringBuilder();
+        StringBuilder linea = new StringBuilder();
         for (int i = 0; i < columnas; i++) {
             System.out.printf("%-" + (ancho[i] + 2) + "s", encabezados.get(i));
-            separador.append("-".repeat(ancho[i] + 2));
+            linea.append("-".repeat(ancho[i] + 2));
         }
         System.out.println();
-        System.out.println(separador);
+        System.out.println(linea);
         for (String[] fila : tabla.getFilas()) {
             for (int i = 0; i < columnas; i++) {
                 System.out.printf("%-" + (ancho[i] + 2) + "s", fila[i] == null ? "-" : fila[i]);
