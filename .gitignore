@@ -4,7 +4,8 @@ target/
 *.jar
 *.war
 
-# Credenciales: nunca se versionan
+# Credenciales: nunca se versionan (ConexionBD carga database.properties)
+src/main/resources/database.properties
 src/main/resources/db.properties
 
 # Bitácora generada en tiempo de ejecución
