@@ -147,11 +147,7 @@ public class FlotaService {
         if (m.getFechaInicio() == null) {
             m.setFechaInicio(LocalDate.now());
         }
-        Connection cn = null;
-        try {
-            cn = ConexionBD.obtenerConexion();
-            cn.setAutoCommit(false);
-
+        return TransaccionUtil.ejecutar("registrar el mantenimiento", cn -> {
             Vehiculo v = vehiculoDAO.buscarPorIdBloqueando(cn, m.getIdVehiculo());
             if (v == null) {
                 throw new NegocioException("No existe un vehiculo con id " + m.getIdVehiculo() + ".");
@@ -163,27 +159,15 @@ public class FlotaService {
             if (m.getFechaFin() == null) {
                 vehiculoDAO.actualizarEstado(cn, v.getIdVehiculo(), EstadoVehiculo.EN_MANTENIMIENTO);
             }
-            cn.commit();
             return id;
-        } catch (SQLException e) {
-            revertir(cn);
-            throw new NegocioException("Error de base de datos al registrar el mantenimiento: " + e.getMessage(), e);
-        } catch (NegocioException e) {
-            revertir(cn);
-            throw e;
-        } finally {
-            cerrar(cn);
-        }
+        });
     }
 
     /** Cierra el mantenimiento y devuelve el vehiculo a Disponible si no quedan otros abiertos. */
     public void finalizarMantenimiento(int idMantenimiento, LocalDate fechaFin, BigDecimal costo)
             throws NegocioException {
-        Connection cn = null;
-        try {
-            cn = ConexionBD.obtenerConexion();
-            cn.setAutoCommit(false);
-
+        LocalDate fin = fechaFin != null ? fechaFin : LocalDate.now();
+        TransaccionUtil.ejecutar("finalizar el mantenimiento", cn -> {
             Mantenimiento m = mantenimientoDAO.buscarPorId(cn, idMantenimiento);
             if (m == null) {
                 throw new NegocioException("No existe un mantenimiento con id " + idMantenimiento + ".");
@@ -191,27 +175,16 @@ public class FlotaService {
             if (!m.estaAbierto()) {
                 throw new NegocioException("El mantenimiento ya fue finalizado el " + m.getFechaFin() + ".");
             }
-            if (fechaFin == null) {
-                fechaFin = LocalDate.now();
-            }
-            if (fechaFin.isBefore(m.getFechaInicio())) {
+            if (fin.isBefore(m.getFechaInicio())) {
                 throw new NegocioException("La fecha de finalizacion no puede ser anterior a la de inicio.");
             }
-            mantenimientoDAO.cerrar(cn, idMantenimiento, fechaFin, costo);
+            mantenimientoDAO.cerrar(cn, idMantenimiento, fin, costo);
 
             if (mantenimientoDAO.contarAbiertosPorVehiculo(cn, m.getIdVehiculo()) == 0) {
                 vehiculoDAO.actualizarEstado(cn, m.getIdVehiculo(), EstadoVehiculo.DISPONIBLE);
             }
-            cn.commit();
-        } catch (SQLException e) {
-            revertir(cn);
-            throw new NegocioException("Error de base de datos al finalizar el mantenimiento: " + e.getMessage(), e);
-        } catch (NegocioException e) {
-            revertir(cn);
-            throw e;
-        } finally {
-            cerrar(cn);
-        }
+            return null;
+        });
     }
 
     // Devuelve el historial de mantenimientos de un vehiculo.
@@ -281,22 +254,8 @@ public class FlotaService {
      * @return el id del conductor que quedo En Ruta con ese vehiculo.
      */
     public int iniciarOperacion(int idVehiculo) throws NegocioException {
-        Connection cn = null;
-        try {
-            cn = ConexionBD.obtenerConexion();
-            cn.setAutoCommit(false);
-            int idConductor = iniciarOperacion(cn, idVehiculo);
-            cn.commit();
-            return idConductor;
-        } catch (SQLException e) {
-            revertir(cn);
-            throw new NegocioException("Error de base de datos al iniciar la operacion: " + e.getMessage(), e);
-        } catch (NegocioException e) {
-            revertir(cn);
-            throw e;
-        } finally {
-            cerrar(cn);
-        }
+        return TransaccionUtil.ejecutar("iniciar la operacion",
+                cn -> iniciarOperacion(cn, idVehiculo));
     }
 
     /**
@@ -321,21 +280,10 @@ public class FlotaService {
 
     /** Devuelve vehiculo y conductor a Disponible/Activo al finalizar la ruta. */
     public void finalizarOperacion(int idVehiculo) throws NegocioException {
-        Connection cn = null;
-        try {
-            cn = ConexionBD.obtenerConexion();
-            cn.setAutoCommit(false);
+        TransaccionUtil.ejecutar("finalizar la operacion", cn -> {
             finalizarOperacion(cn, idVehiculo);
-            cn.commit();
-        } catch (SQLException e) {
-            revertir(cn);
-            throw new NegocioException("Error de base de datos al finalizar la operacion: " + e.getMessage(), e);
-        } catch (NegocioException e) {
-            revertir(cn);
-            throw e;
-        } finally {
-            cerrar(cn);
-        }
+            return null;
+        });
     }
 
     // =================================================================
@@ -368,20 +316,6 @@ public class FlotaService {
         }
         if (v.getCapacidadCargaKg() == null || v.getCapacidadCargaKg().compareTo(BigDecimal.ZERO) <= 0) {
             throw new NegocioException("La capacidad de carga debe ser mayor que cero.");
-        }
-    }
-
-    // Hace rollback de la conexion, ignorando errores.
-    private void revertir(Connection cn) {
-        if (cn != null) {
-            try { cn.rollback(); } catch (SQLException ignored) { }
-        }
-    }
-
-    // Restaura autocommit y cierra la conexion.
-    private void cerrar(Connection cn) {
-        if (cn != null) {
-            try { cn.setAutoCommit(true); cn.close(); } catch (SQLException ignored) { }
         }
     }
 }

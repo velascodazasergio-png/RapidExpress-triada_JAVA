@@ -137,11 +137,7 @@ public class ConductorService {
      * terminales no puedan asignar el mismo conductor al mismo tiempo.
      */
     public int asignarConductorAVehiculo(int idConductor, int idVehiculo) throws NegocioException {
-        Connection cn = null;
-        try {
-            cn = ConexionBD.obtenerConexion();
-            cn.setAutoCommit(false);
-
+        return TransaccionUtil.ejecutar("asignar el conductor", cn -> {
             // Orden de bloqueo fijo en todo el sistema: vehiculo antes que conductor
             // (igual que FlotaService.iniciarOperacion y RutaService.iniciarRuta).
             Vehiculo v = vehiculoDAO.buscarPorIdBloqueando(cn, idVehiculo);
@@ -166,18 +162,8 @@ public class ConductorService {
             if (asignacionDAO.buscarVigentePorVehiculo(cn, idVehiculo) != null) {
                 throw new NegocioException("El vehiculo ya tiene un conductor asignado.");
             }
-            int id = asignacionDAO.insertar(cn, new Asignacion(idConductor, idVehiculo));
-            cn.commit();
-            return id;
-        } catch (SQLException e) {
-            revertir(cn);
-            throw new NegocioException("Error de base de datos al asignar el conductor: " + e.getMessage(), e);
-        } catch (NegocioException e) {
-            revertir(cn);
-            throw e;
-        } finally {
-            cerrar(cn);
-        }
+            return asignacionDAO.insertar(cn, new Asignacion(idConductor, idVehiculo));
+        });
     }
 
     /** Cierra la asignacion vigente de un conductor. */
@@ -259,17 +245,4 @@ public class ConductorService {
         }
     }
 
-    // Hace rollback de la conexion, ignorando errores.
-    private void revertir(Connection cn) {
-        if (cn != null) {
-            try { cn.rollback(); } catch (SQLException ignored) { }
-        }
-    }
-
-    // Restaura autocommit y cierra la conexion.
-    private void cerrar(Connection cn) {
-        if (cn != null) {
-            try { cn.setAutoCommit(true); cn.close(); } catch (SQLException ignored) { }
-        }
-    }
 }
