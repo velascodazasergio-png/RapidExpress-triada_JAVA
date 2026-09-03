@@ -24,6 +24,11 @@ public class PaqueteController {
         return paqueteService.registrarCliente(cliente);
     }
 
+    /**
+     * Busca un paquete por su codigo de seguimiento (se normaliza a mayusculas).
+     *
+     * @throws NegocioException si no existe ningun paquete con ese codigo
+     */
     public Paquete rastrear(String codigoSeguimiento) throws NegocioException {
         return paqueteService.rastrear(codigoSeguimiento);
     }
@@ -40,10 +45,21 @@ public class PaqueteController {
         return paqueteService.listarClientes();
     }
 
+    /**
+     * Edita los datos de un paquete. Solo se permite mientras siga En Bodega.
+     *
+     * @throws NegocioException si el paquete no existe o ya no esta En Bodega
+     */
     public void actualizarPaquete(Paquete paquete) throws NegocioException {
         paqueteService.actualizarDatos(paquete);
     }
 
+    /**
+     * Cambio de estado manual validando el ciclo de vida del paquete. Los
+     * paquetes que pertenecen a una ruta activa los gestiona el modulo de rutas.
+     *
+     * @throws NegocioException si la transicion es invalida o el paquete esta en una ruta activa
+     */
     public void cambiarEstadoPaquete(int idPaquete, EstadoPaquete nuevoEstado) throws NegocioException {
         paqueteService.cambiarEstado(idPaquete, nuevoEstado);
     }

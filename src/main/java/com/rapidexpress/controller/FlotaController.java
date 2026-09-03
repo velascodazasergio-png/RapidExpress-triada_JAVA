@@ -84,14 +84,22 @@ public class FlotaController {
 
     // --- API para el modulo de Rutas (Persona 2) ---
 
+    /** Vehiculos Disponibles que el modulo de rutas puede usar para armar una hoja de ruta. */
     public List<Vehiculo> obtenerVehiculosDisponibles() throws NegocioException {
         return flotaService.obtenerVehiculosDisponibles();
     }
 
+    /**
+     * Pone el vehiculo y su conductor asignado En Ruta, en una sola transaccion.
+     *
+     * @return el id del conductor que quedo En Ruta con ese vehiculo
+     * @throws NegocioException si el vehiculo no esta Disponible o no tiene conductor activo
+     */
     public int iniciarOperacion(int idVehiculo) throws NegocioException {
         return flotaService.iniciarOperacion(idVehiculo);
     }
 
+    /** Devuelve vehiculo y conductor a Disponible/Activo al finalizar la ruta. */
     public void finalizarOperacion(int idVehiculo) throws NegocioException {
         flotaService.finalizarOperacion(idVehiculo);
     }
@@ -99,14 +107,30 @@ public class FlotaController {
     // --- Variantes transaccionales: el modulo de rutas las llama dentro de SU
     //     transaccion para que iniciar/cerrar una ruta sea una sola unidad ACID.
 
+    /**
+     * Lee y BLOQUEA el vehiculo sobre la conexion recibida
+     * ({@code SELECT ... FOR UPDATE}). Solo dentro de una transaccion.
+     *
+     * @return el vehiculo bloqueado, o {@code null} si no existe
+     */
     public Vehiculo buscarVehiculoBloqueando(Connection cn, int idVehiculo) throws SQLException {
         return flotaService.buscarPorIdBloqueando(cn, idVehiculo);
     }
 
+    /**
+     * Variante de {@link #iniciarOperacion(int)} que opera sobre la conexion
+     * recibida y NO hace commit ni la cierra.
+     *
+     * @return el id del conductor que quedo En Ruta con ese vehiculo
+     */
     public int iniciarOperacion(Connection cn, int idVehiculo) throws NegocioException, SQLException {
         return flotaService.iniciarOperacion(cn, idVehiculo);
     }
 
+    /**
+     * Variante de {@link #finalizarOperacion(int)} que opera sobre la conexion
+     * recibida y NO hace commit ni la cierra.
+     */
     public void finalizarOperacion(Connection cn, int idVehiculo) throws NegocioException, SQLException {
         flotaService.finalizarOperacion(cn, idVehiculo);
     }
