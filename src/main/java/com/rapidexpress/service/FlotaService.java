@@ -32,6 +32,7 @@ public class FlotaService {
     // CRUD de vehiculos
     // =================================================================
 
+    // Registra un vehiculo nuevo.
     public int registrarVehiculo(Vehiculo v) throws NegocioException {
         validarDatosVehiculo(v);
         try (Connection cn = ConexionBD.obtenerConexion()) {
@@ -45,6 +46,7 @@ public class FlotaService {
         }
     }
 
+    // Actualiza los datos de un vehiculo.
     public void actualizarVehiculo(Vehiculo v) throws NegocioException {
         validarDatosVehiculo(v);
         try (Connection cn = ConexionBD.obtenerConexion()) {
@@ -62,6 +64,7 @@ public class FlotaService {
         }
     }
 
+    // Elimina un vehiculo.
     public void eliminarVehiculo(int idVehiculo) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             Vehiculo v = obtenerObligatorio(cn, idVehiculo);
@@ -80,6 +83,7 @@ public class FlotaService {
         }
     }
 
+    // Busca un registro por su id.
     public Vehiculo buscarPorId(int idVehiculo) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return vehiculoDAO.buscarPorId(cn, idVehiculo);
@@ -88,6 +92,7 @@ public class FlotaService {
         }
     }
 
+    // Busca un vehiculo por su placa.
     public Vehiculo buscarPorPlaca(String placa) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return vehiculoDAO.buscarPorPlaca(cn, placa);
@@ -96,6 +101,7 @@ public class FlotaService {
         }
     }
 
+    // Lista todos los vehiculos.
     public List<Vehiculo> listarVehiculos() throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return vehiculoDAO.listarTodos(cn);
@@ -104,6 +110,7 @@ public class FlotaService {
         }
     }
 
+    // Lista los registros filtrados por estado.
     public List<Vehiculo> listarPorEstado(EstadoVehiculo estado) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return vehiculoDAO.listarPorEstado(cn, estado);
@@ -218,6 +225,7 @@ public class FlotaService {
         }
     }
 
+    // Devuelve el historial de mantenimientos de un vehiculo.
     public List<Mantenimiento> historialMantenimientos(int idVehiculo) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             obtenerObligatorio(cn, idVehiculo);
@@ -227,6 +235,7 @@ public class FlotaService {
         }
     }
 
+    // Lista los mantenimientos sin finalizar.
     public List<Mantenimiento> listarMantenimientosAbiertos() throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return mantenimientoDAO.listarAbiertos(cn);
@@ -349,6 +358,7 @@ public class FlotaService {
     // Apoyo interno
     // =================================================================
 
+    // Busca el registro y lanza NegocioException si no existe.
     private Vehiculo obtenerObligatorio(Connection cn, int idVehiculo) throws SQLException, NegocioException {
         Vehiculo v = vehiculoDAO.buscarPorId(cn, idVehiculo);
         if (v == null) {
@@ -357,6 +367,7 @@ public class FlotaService {
         return v;
     }
 
+    // Valida los datos del vehiculo; lanza NegocioException si algo falla.
     private void validarDatosVehiculo(Vehiculo v) throws NegocioException {
         if (v.getPlaca() == null || !v.getPlaca().matches("[A-Z]{3}[0-9]{3}")) {
             throw new NegocioException("La placa debe tener el formato ABC123.");
@@ -376,12 +387,14 @@ public class FlotaService {
         }
     }
 
+    // Hace rollback de la conexion, ignorando errores.
     private void revertir(Connection cn) {
         if (cn != null) {
             try { cn.rollback(); } catch (SQLException ignored) { }
         }
     }
 
+    // Restaura autocommit y cierra la conexion.
     private void cerrar(Connection cn) {
         if (cn != null) {
             try { cn.setAutoCommit(true); cn.close(); } catch (SQLException ignored) { }

@@ -27,6 +27,7 @@ public class ConductorService {
     // CRUD de conductores
     // =================================================================
 
+    // Registra un conductor nuevo.
     public int registrarConductor(Conductor c) throws NegocioException {
         validarDatos(c);
         try (Connection cn = ConexionBD.obtenerConexion()) {
@@ -40,6 +41,7 @@ public class ConductorService {
         }
     }
 
+    // Actualiza los datos de un conductor.
     public void actualizarConductor(Conductor c) throws NegocioException {
         validarDatos(c);
         try (Connection cn = ConexionBD.obtenerConexion()) {
@@ -56,6 +58,7 @@ public class ConductorService {
         }
     }
 
+    // Elimina un conductor.
     public void eliminarConductor(int idConductor) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             Conductor c = obtenerObligatorio(cn, idConductor);
@@ -74,6 +77,7 @@ public class ConductorService {
         }
     }
 
+    // Busca un registro por su id.
     public Conductor buscarPorId(int idConductor) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return conductorDAO.buscarPorId(cn, idConductor);
@@ -82,6 +86,7 @@ public class ConductorService {
         }
     }
 
+    // Busca un conductor por su identificacion.
     public Conductor buscarPorIdentificacion(String identificacion) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return conductorDAO.buscarPorIdentificacion(cn, identificacion);
@@ -90,6 +95,7 @@ public class ConductorService {
         }
     }
 
+    // Lista todos los conductores.
     public List<Conductor> listarConductores() throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return conductorDAO.listarTodos(cn);
@@ -98,6 +104,7 @@ public class ConductorService {
         }
     }
 
+    // Lista los registros filtrados por estado.
     public List<Conductor> listarPorEstado(EstadoConductor estado) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return conductorDAO.listarPorEstado(cn, estado);
@@ -201,6 +208,7 @@ public class ConductorService {
         }
     }
 
+    // Lista las asignaciones conductor-vehiculo vigentes.
     public List<Asignacion> listarAsignacionesVigentes() throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return asignacionDAO.listarVigentes(cn);
@@ -209,6 +217,7 @@ public class ConductorService {
         }
     }
 
+    // Devuelve el historial de asignaciones de un vehiculo.
     public List<Asignacion> historialPorVehiculo(int idVehiculo) throws NegocioException {
         try (Connection cn = ConexionBD.obtenerConexion()) {
             return asignacionDAO.listarHistorialPorVehiculo(cn, idVehiculo);
@@ -245,6 +254,7 @@ public class ConductorService {
     // Apoyo interno
     // =================================================================
 
+    // Busca el registro y lanza NegocioException si no existe.
     private Conductor obtenerObligatorio(Connection cn, int idConductor) throws SQLException, NegocioException {
         Conductor c = conductorDAO.buscarPorId(cn, idConductor);
         if (c == null) {
@@ -253,6 +263,7 @@ public class ConductorService {
         return c;
     }
 
+    // Valida los datos obligatorios; lanza NegocioException si algo falla.
     private void validarDatos(Conductor c) throws NegocioException {
         if (c.getIdentificacion() == null || !c.getIdentificacion().matches("[0-9]{6,15}")) {
             throw new NegocioException("La identificacion debe ser numerica (entre 6 y 15 digitos).");
@@ -268,12 +279,14 @@ public class ConductorService {
         }
     }
 
+    // Hace rollback de la conexion, ignorando errores.
     private void revertir(Connection cn) {
         if (cn != null) {
             try { cn.rollback(); } catch (SQLException ignored) { }
         }
     }
 
+    // Restaura autocommit y cierra la conexion.
     private void cerrar(Connection cn) {
         if (cn != null) {
             try { cn.setAutoCommit(true); cn.close(); } catch (SQLException ignored) { }
