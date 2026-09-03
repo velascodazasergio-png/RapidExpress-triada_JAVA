@@ -17,6 +17,7 @@ public class Mantenimiento {
 
         public String getEtiqueta() { return etiqueta; }
 
+        // Devuelve el valor del enum a partir de su etiqueta.
         public static Tipo desdeEtiqueta(String etiqueta) {
             for (Tipo t : values()) {
                 if (t.etiqueta.equalsIgnoreCase(etiqueta)) return t;
@@ -37,6 +38,7 @@ public class Mantenimiento {
     private BigDecimal costo;
     private String taller;
 
+    // Crea una instancia de Mantenimiento.
     public Mantenimiento() {
         this.costo = BigDecimal.ZERO;
     }
@@ -67,6 +69,7 @@ public class Mantenimiento {
 
     public boolean estaAbierto() { return fechaFin == null; }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return String.format("[%d] %s | %s | inicio: %s | fin: %s | $%s | %s",

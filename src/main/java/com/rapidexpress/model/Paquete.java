@@ -27,6 +27,7 @@ public class Paquete {
     private String nombreRemitente;
     private String nombreDestinatario;
 
+    // Crea una instancia de Paquete.
     public Paquete() {
     }
 
@@ -84,6 +85,7 @@ public class Paquete {
     public String getNombreDestinatario() { return nombreDestinatario; }
     public void setNombreDestinatario(String nombreDestinatario) { this.nombreDestinatario = nombreDestinatario; }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return String.format("%-16s %-26s %8s kg  %-14s -> %-14s %s",
@@ -91,6 +93,7 @@ public class Paquete {
                 ciudadOrigen, ciudadDestino, estado.getEtiqueta());
     }
 
+    // Recorta un texto a un maximo de caracteres con puntos suspensivos.
     private String recortar(String texto, int max) {
         if (texto == null) {
             return "";

@@ -13,10 +13,12 @@ public class Vehiculo {
     private BigDecimal capacidadCargaKg;
     private EstadoVehiculo estado;
 
+    // Constructor vacio.
     public Vehiculo() {
         this.estado = EstadoVehiculo.DISPONIBLE;
     }
 
+    // Constructor con los datos principales.
     public Vehiculo(String placa, String marca, String modelo, int anioFabricacion, BigDecimal capacidadCargaKg) {
         this();
         this.placa = placa;
@@ -47,6 +49,7 @@ public class Vehiculo {
     public EstadoVehiculo getEstado() { return estado; }
     public void setEstado(EstadoVehiculo estado) { this.estado = estado; }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return String.format("[%d] %s | %s %s (%d) | %.2f kg | %s",

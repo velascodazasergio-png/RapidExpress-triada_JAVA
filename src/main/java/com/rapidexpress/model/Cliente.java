@@ -16,9 +16,11 @@ public class Cliente {
     private String direccion;
     private String ciudad;
 
+    // Constructor vacio.
     public Cliente() {
     }
 
+    // Constructor con los datos principales.
     public Cliente(String documento, String nombre, String telefono, String email,
                    String direccion, String ciudad) {
         this.documento = documento;
@@ -52,6 +54,7 @@ public class Cliente {
     public String getCiudad() { return ciudad; }
     public void setCiudad(String ciudad) { this.ciudad = ciudad; }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return String.format("[%d] %-32s doc: %-14s %s", idCliente, nombre, documento, ciudad);

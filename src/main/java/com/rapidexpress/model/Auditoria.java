@@ -22,6 +22,7 @@ public class Auditoria {
         public static final String CAMBIAR_ESTADO_VEHICULO = "CAMBIAR_ESTADO_VEHICULO";
         public static final String REGISTRAR_MANTENIMIENTO = "REGISTRAR_MANTENIMIENTO";
 
+        // Constructor privado: solo agrupa constantes.
         private Operacion() { }
     }
 
@@ -32,6 +33,7 @@ public class Auditoria {
         public static final String VEHICULO   = "VEHICULO";
         public static final String CONDUCTOR  = "CONDUCTOR";
 
+        // Constructor privado: solo agrupa constantes.
         private Entidad() { }
     }
 
@@ -45,6 +47,7 @@ public class Auditoria {
     private final String estadoNuevo;
     private final String detalle;
 
+    // Constructor completo; lo usa el DAO al reconstruir un evento desde la base de datos.
     public Auditoria(long id, LocalDateTime fechaHora, String operacion, String entidad,
                      String idEntidad, String usuario, String estadoAnterior,
                      String estadoNuevo, String detalle) {
@@ -89,6 +92,7 @@ public class Auditoria {
                 detalle == null ? "" : detalle);
     }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return aLineaLog();

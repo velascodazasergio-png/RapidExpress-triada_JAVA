@@ -19,9 +19,11 @@ public class Asignacion {
     private String nombreConductor;
     private String placaVehiculo;
 
+    // Constructor vacio.
     public Asignacion() {
     }
 
+    // Constructor con los datos principales.
     public Asignacion(int idConductor, int idVehiculo) {
         this.idConductor = idConductor;
         this.idVehiculo = idVehiculo;
@@ -51,6 +53,7 @@ public class Asignacion {
 
     public boolean estaVigente() { return fechaFin == null; }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return String.format("[%d] %s -> %s | desde: %s | hasta: %s",

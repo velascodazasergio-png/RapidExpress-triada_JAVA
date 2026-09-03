@@ -32,6 +32,7 @@ public class Ruta {
     private String nombreConductor;
     private BigDecimal capacidadVehiculoKg;
 
+    // Suma el peso de todos los paquetes de la ruta.
     public BigDecimal getPesoTotalKg() {
         BigDecimal total = BigDecimal.ZERO;
         for (Paquete p : paquetes) {
@@ -79,6 +80,7 @@ public class Ruta {
     public BigDecimal getCapacidadVehiculoKg() { return capacidadVehiculoKg; }
     public void setCapacidadVehiculoKg(BigDecimal capacidadVehiculoKg) { this.capacidadVehiculoKg = capacidadVehiculoKg; }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return String.format("%-16s %s  veh %-8s cond %-28s %2d paq  %9s kg  %s",
@@ -88,6 +90,7 @@ public class Ruta {
                 paquetes.size(), getPesoTotalKg(), estado.getEtiqueta());
     }
 
+    // Recorta un texto a un maximo de caracteres con puntos suspensivos.
     private String recortar(String texto, int max) {
         return texto.length() <= max ? texto : texto.substring(0, max - 3) + "...";
     }

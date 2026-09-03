@@ -10,10 +10,12 @@ public class Conductor {
     private String contacto;
     private EstadoConductor estado;
 
+    // Constructor vacio.
     public Conductor() {
         this.estado = EstadoConductor.ACTIVO;
     }
 
+    // Constructor con los datos principales.
     public Conductor(String identificacion, String nombreCompleto, TipoLicencia tipoLicencia, String contacto) {
         this();
         this.identificacion = identificacion;
@@ -42,6 +44,7 @@ public class Conductor {
     public EstadoConductor getEstado() { return estado; }
     public void setEstado(EstadoConductor estado) { this.estado = estado; }
 
+    // Representacion legible para mostrar en consola.
     @Override
     public String toString() {
         return String.format("[%d] %s | %s | Lic. %s | Tel. %s | %s",
