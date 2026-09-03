@@ -14,6 +14,7 @@ import com.rapidexpress.view.RutaMenuView;
  */
 public class MainRutasPruebas {
 
+    // Punto de entrada.
     public static void main(String[] args) {
         ConsolaUtil.titulo("RapidExpress - Modulo Paquetes y Rutas (pruebas)");
 

@@ -8,6 +8,7 @@ public class AuditoriaConsola implements AuditoriaGateway {
 
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    // Registra un evento de auditoria.
     @Override
     public void registrar(String accion, String entidad, String idEntidad, String detalle) {
         System.out.printf("[AUDIT %s] %s %s#%s :: %s%n",

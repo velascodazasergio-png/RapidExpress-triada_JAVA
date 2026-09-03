@@ -10,6 +10,7 @@ import com.rapidexpress.util.ConexionBD;
  */
 public class PruebaConexion {
 
+    // Punto de entrada.
     public static void main(String[] args) {
         System.out.println(ConexionBD.probarConexion());
     }

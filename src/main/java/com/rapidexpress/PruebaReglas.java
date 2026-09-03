@@ -32,6 +32,7 @@ public class PruebaReglas {
     private static int ok = 0;
     private static int ko = 0;
 
+    // Punto de entrada.
     public static void main(String[] args) throws Exception {
         String s = String.format("%03d", (int) (System.nanoTime() % 1000));
         String ident = "77" + String.format("%06d", (int) (System.nanoTime() % 1_000_000));
@@ -77,6 +78,7 @@ public class PruebaReglas {
         void run() throws NegocioException;
     }
 
+    // Ejecuta la accion y verifica que lance NegocioException.
     private static void esperarError(String nombre, Accion a) {
         try {
             a.run();
@@ -86,10 +88,12 @@ public class PruebaReglas {
         }
     }
 
+    // Registra el resultado de una condicion booleana.
     private static void comprobar(String nombre, boolean condicion) {
         registrar(nombre, condicion, condicion ? "" : "condicion falsa");
     }
 
+    // Registra un evento de auditoria.
     private static void registrar(String nombre, boolean paso, String detalle) {
         if (paso) {
             ok++;
@@ -100,6 +104,7 @@ public class PruebaReglas {
                 + (detalle.isEmpty() ? "" : "  -> " + detalle));
     }
 
+    // Lee el estado de un vehiculo directamente de la base de datos.
     private static String estadoEnBD(int idVehiculo) throws Exception {
         try (Connection cn = ConexionBD.obtenerConexion();
              Statement st = cn.createStatement();
@@ -109,6 +114,7 @@ public class PruebaReglas {
         }
     }
 
+    // Borra los datos de prueba creados.
     private static void limpiar(String s, String ident) {
         String[] sentencias = {
             "DELETE a FROM asignaciones_conductor_vehiculo a "

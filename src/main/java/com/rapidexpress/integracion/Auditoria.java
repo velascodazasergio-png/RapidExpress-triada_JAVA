@@ -15,15 +15,18 @@ public final class Auditoria {
 
     private static AuditoriaGateway actual = new AuditoriaConsola();
 
+    // Constructor privado: clase de utilidad, no se instancia.
     private Auditoria() {
     }
 
+    // Fija el gateway de auditoria que usara el sistema.
     public static void usar(AuditoriaGateway gateway) {
         if (gateway != null) {
             actual = gateway;
         }
     }
 
+    // Devuelve el gateway de auditoria vigente.
     public static AuditoriaGateway actual() {
         return actual;
     }

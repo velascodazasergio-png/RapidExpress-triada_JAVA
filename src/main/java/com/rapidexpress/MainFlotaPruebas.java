@@ -14,6 +14,7 @@ import com.rapidexpress.view.FlotaMenuView;
  */
 public class MainFlotaPruebas {
 
+    // Punto de entrada.
     public static void main(String[] args) {
         ConsolaUtil.titulo("RapidExpress - Modulo Flota y Personal (pruebas)");
 

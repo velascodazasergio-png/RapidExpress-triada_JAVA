@@ -7,10 +7,12 @@ package com.rapidexpress.excepcion;
  */
 public class NegocioException extends Exception {
 
+    // Crea la excepcion con un mensaje para el usuario.
     public NegocioException(String mensaje) {
         super(mensaje);
     }
 
+    // Crea la excepcion con un mensaje y la causa original.
     public NegocioException(String mensaje, Throwable causa) {
         super(mensaje, causa);
     }
