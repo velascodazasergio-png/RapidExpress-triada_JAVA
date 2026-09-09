@@ -72,6 +72,55 @@ public class ConsultaDAO {
         return ejecutarSinParametros("CONDUCTORES ACTIVOS SIN VEHICULO ASIGNADO", sql);
     }
 
+    /**
+     * Devuelve los {@code limite} clientes que mas paquetes han enviado
+     * (patron GROUP BY + COUNT + ORDER BY total DESC + LIMIT: ranking / top N).
+     */
+    public TablaReporte topClientesRemitentes(int limite) throws SQLException {
+        String sql = """
+                SELECT cl.nombre                  AS cliente,
+                       cl.ciudad                  AS ciudad,
+                       COUNT(p.id_paquete)        AS paquetes_enviados,
+                       ROUND(SUM(p.peso_kg), 2)   AS kg_totales
+                FROM clientes cl
+                JOIN paquetes p ON p.id_remitente = cl.id_cliente
+                GROUP BY cl.id_cliente, cl.nombre, cl.ciudad
+                ORDER BY paquetes_enviados DESC, kg_totales DESC
+                LIMIT ?
+                """;
+        try (Connection cn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, limite);
+            try (ResultSet rs = ps.executeQuery()) {
+                return TablaReporte.desde("TOP " + limite + " CLIENTES REMITENTES", rs);
+            }
+        }
+    }
+
+    /**
+     * Devuelve los clientes que han recibido al menos {@code minPaquetes}
+     * paquetes (patron GROUP BY + HAVING: filtrar por el resultado agregado).
+     */
+    public TablaReporte destinatariosFrecuentes(int minPaquetes) throws SQLException {
+        String sql = """
+                SELECT cl.nombre              AS cliente,
+                       cl.ciudad              AS ciudad,
+                       COUNT(p.id_paquete)    AS paquetes_recibidos
+                FROM clientes cl
+                JOIN paquetes p ON p.id_destinatario = cl.id_cliente
+                GROUP BY cl.id_cliente, cl.nombre, cl.ciudad
+                HAVING COUNT(p.id_paquete) >= ?
+                ORDER BY paquetes_recibidos DESC
+                """;
+        try (Connection cn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, minPaquetes);
+            try (ResultSet rs = ps.executeQuery()) {
+                return TablaReporte.desde("DESTINATARIOS CON " + minPaquetes + "+ PAQUETES", rs);
+            }
+        }
+    }
+
     /** Ejecuta un SELECT sin parametros y lo envuelve en un {@link TablaReporte}. */
     private TablaReporte ejecutarSinParametros(String titulo, String sql) throws SQLException {
         try (Connection cn = ConexionBD.obtenerConexion();
