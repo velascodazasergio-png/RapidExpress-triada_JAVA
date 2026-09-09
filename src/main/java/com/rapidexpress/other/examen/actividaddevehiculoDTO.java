@@ -16,7 +16,8 @@ public record ActividadVehiculoDTO(
         int paquetesEntregados,
         double kgEntregados,
         double costoMantenimiento) {
-
+        
+        
     /** Porcentaje de rutas que llegaron a Finalizada. */
     public double porcentajeFinalizacion() {
         return rutasTotales == 0 ? 0.0 : rutasFinalizadas * 100.0 / rutasTotales;
