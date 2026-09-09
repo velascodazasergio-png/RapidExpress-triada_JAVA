@@ -13,7 +13,13 @@ import java.util.List;
  */
 public class ReporteActividadController {
 
+
+
+
     private final ReporteActividadDAO dao;
+
+
+
 
     // Constructor por defecto: crea su propio DAO.
     public ReporteActividadController() {

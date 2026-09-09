@@ -17,6 +17,10 @@ public record ActividadVehiculoDTO(
         double kgEntregados,
         double costoMantenimiento) {
         
+
+
+
+        
         
     /** Porcentaje de rutas que llegaron a Finalizada. */
     public double porcentajeFinalizacion() {
