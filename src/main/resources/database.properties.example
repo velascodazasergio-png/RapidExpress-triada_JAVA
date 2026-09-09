@@ -18,8 +18,8 @@
 #  - Nube:   jdbc:mysql://<host>:3306/rapidexpress
 #
 # Parametros recomendados (evitan avisos de zona horaria y de SSL):
-db.url=jdbc:mysql://localhost:3306/rapidexpress?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Bogota&characterEncoding=UTF-8
+db.url=jdbc:mysql://hayabusa.proxy.rlwy.net:27823/rapidexpress?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Bogota&characterEncoding=UTF-8
 
 # Usuario y contrasena de MySQL.
 db.user=root
-db.password=cambie_esta_contrasena
+db.password=fYpMrUtmqqJKfxEIqvsmsZoCocCXbDob
