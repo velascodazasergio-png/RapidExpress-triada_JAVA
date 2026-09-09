@@ -3,6 +3,7 @@ package com.rapidexpress.examen;
 import com.rapidexpress.excepcion.NegocioException;
 
 import java.math.BigDecimal;
+import java.util.regex.Pattern;
 
 /**
  * Utilidades de VERIFICACION DE DATOS reutilizables.
@@ -12,6 +13,12 @@ import java.math.BigDecimal;
  * normalizado (trim / mayusculas) para poder encadenarlo.</p>
  */
 public final class ValidacionUtil {
+
+    // Formato ABC123 (tres letras + tres digitos). Se acepta con o sin guion.
+    private static final Pattern PLACA        = Pattern.compile("^[A-Z]{3}[0-9]{3}$");
+    private static final Pattern EMAIL        = Pattern.compile("^[\\w.+-]+@[\\w-]+\\.[\\w.-]+$");
+    private static final Pattern SOLO_DIGITOS = Pattern.compile("^[0-9]{7,10}$");
+    private static final Pattern TELEFONO     = Pattern.compile("^[0-9]{7,15}$");
 
     // Constructor privado: clase de utilidad, no se instancia.
     private ValidacionUtil() {
@@ -57,5 +64,53 @@ public final class ValidacionUtil {
             throw new NegocioException("El campo '" + campo + "' no puede ser negativo.");
         }
         return valor;
+    }
+
+    /** Valida una placa ABC123; normaliza a mayusculas y quita guiones y espacios. */
+    public static String placa(String valor) throws NegocioException {
+        String v = texto("placa", valor).toUpperCase().replace("-", "").replace(" ", "");
+        if (!PLACA.matcher(v).matches()) {
+            throw new NegocioException("Placa invalida '" + valor + "'. Formato esperado: ABC123.");
+        }
+        return v;
+    }
+
+    /** Valida un correo con formato basico usuario@dominio.ext. */
+    public static String email(String valor) throws NegocioException {
+        String v = texto("email", valor);
+        if (!EMAIL.matcher(v).matches()) {
+            throw new NegocioException("Correo electronico invalido: '" + valor + "'.");
+        }
+        return v;
+    }
+
+    /** Valida un documento de identidad: solo digitos, entre 7 y 10. */
+    public static String documento(String valor) throws NegocioException {
+        String v = texto("documento", valor);
+        if (!SOLO_DIGITOS.matcher(v).matches()) {
+            throw new NegocioException("El documento debe tener entre 7 y 10 digitos.");
+        }
+        return v;
+    }
+
+    /** Valida un telefono: solo digitos, entre 7 y 15. */
+    public static String telefono(String valor) throws NegocioException {
+        String v = texto("telefono", valor).replace(" ", "");
+        if (!TELEFONO.matcher(v).matches()) {
+            throw new NegocioException("Telefono invalido: '" + valor + "'.");
+        }
+        return v;
+    }
+
+    /** Comprueba que un valor pertenezca al conjunto de opciones permitidas. */
+    public static String opcion(String campo, String valor, String... permitidos) throws NegocioException {
+        String v = texto(campo, valor);
+        for (String p : permitidos) {
+            if (p.equalsIgnoreCase(v)) {
+                return p;
+            }
+        }
+        throw new NegocioException("Valor '" + valor + "' no valido para '" + campo + "'. Opciones: "
+                + String.join(", ", permitidos) + ".");
     }
 }
