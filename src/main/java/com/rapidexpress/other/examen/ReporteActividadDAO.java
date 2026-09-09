@@ -1,4 +1,4 @@
-package com.rapidexpress.examen;
+package com.rapidexpress;
 
 import com.rapidexpress.util.ConexionBD;
 
