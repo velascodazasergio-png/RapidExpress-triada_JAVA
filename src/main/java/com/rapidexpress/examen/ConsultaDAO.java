@@ -7,9 +7,11 @@ import com.rapidexpress.util.ConexionBD;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +119,41 @@ public class ConsultaDAO {
             ps.setInt(1, minPaquetes);
             try (ResultSet rs = ps.executeQuery()) {
                 return TablaReporte.desde("DESTINATARIOS CON " + minPaquetes + "+ PAQUETES", rs);
+            }
+        }
+    }
+
+    /**
+     * Devuelve los paquetes cuyo estado es Entregado y cuya fecha de entrega
+     * cae dentro de [desde, hasta], con su remitente, destinatario, ruta y
+     * conductor (patron rango de fechas + varios JOIN).
+     */
+    public TablaReporte paquetesEntregadosEntre(LocalDate desde, LocalDate hasta) throws SQLException {
+        String sql = """
+                SELECT p.codigo_seguimiento   AS guia,
+                       p.descripcion          AS descripcion,
+                       p.peso_kg              AS peso_kg,
+                       rem.nombre             AS remitente,
+                       des.nombre             AS destinatario,
+                       r.codigo               AS ruta,
+                       cond.nombre_completo   AS conductor,
+                       p.fecha_entrega        AS entregado_el
+                FROM paquetes p
+                JOIN clientes rem ON rem.id_cliente = p.id_remitente
+                JOIN clientes des ON des.id_cliente = p.id_destinatario
+                LEFT JOIN ruta_paquetes rp ON rp.id_paquete  = p.id_paquete
+                LEFT JOIN rutas r          ON r.id_ruta      = rp.id_ruta
+                LEFT JOIN conductores cond ON cond.id_conductor = r.id_conductor
+                WHERE p.estado = 'Entregado'
+                  AND DATE(p.fecha_entrega) BETWEEN ? AND ?
+                ORDER BY p.fecha_entrega
+                """;
+        try (Connection cn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setDate(1, Date.valueOf(desde));
+            ps.setDate(2, Date.valueOf(hasta));
+            try (ResultSet rs = ps.executeQuery()) {
+                return TablaReporte.desde("PAQUETES ENTREGADOS ENTRE " + desde + " Y " + hasta, rs);
             }
         }
     }
