@@ -1,7 +1,10 @@
-package com.rapidexpress.examen;
+package com.rapidexpress.other;
 
+import com.rapidexpress.ReporteActividadController;
+import com.rapidexpress.examen.ConsultaDAO;
 import com.rapidexpress.excepcion.NegocioException;
 import com.rapidexpress.model.Vehiculo;
+import com.rapidexpress.model.dto.ActividadVehiculoDTO;
 import com.rapidexpress.view.ConsolaUtil;
 
 import java.math.BigDecimal;

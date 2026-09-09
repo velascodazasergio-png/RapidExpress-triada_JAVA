@@ -1,4 +1,4 @@
-package com.rapidexpress;
+package com.rapidexpress.other.examen;
 
 import com.rapidexpress.model.dto.ActividadVehiculoDTO;
 import com.rapidexpress.util.ConexionBD;
