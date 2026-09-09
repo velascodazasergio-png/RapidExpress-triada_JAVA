@@ -1,5 +1,6 @@
 package com.rapidexpress;
 
+import com.rapidexpress.model.dto.ActividadVehiculoDTO;
 import com.rapidexpress.util.ConexionBD;
 
 import java.sql.Connection;
@@ -23,7 +24,8 @@ import java.util.List;
  * FROM por {@code SELECT * FROM v_actividad_vehiculo}.</p>
  */
 public class ReporteActividadDAO {
-
+ 
+    
     private static final String SQL = """
             SELECT v.placa                                                        AS placa,
                    v.marca                                                        AS marca,
