@@ -13,7 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Coleccion de CONSULTAS de solo lectura de ejemplo.
@@ -175,6 +177,35 @@ public class ConsultaDAO {
                 ORDER BY costo_total DESC
                 """;
         return ejecutarSinParametros("COSTO DE MANTENIMIENTO POR VEHICULO", sql);
+    }
+
+    /**
+     * Devuelve cuantos paquetes hay en cada estado, en un mapa que conserva el
+     * orden (de mayor a menor cantidad) para operar con el desde Java.
+     */
+    public Map<String, Integer> conteoPaquetesPorEstado() throws SQLException {
+        String sql = "SELECT estado, COUNT(*) AS cantidad FROM paquetes GROUP BY estado ORDER BY cantidad DESC";
+        Map<String, Integer> conteo = new LinkedHashMap<>();
+        try (Connection cn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                conteo.put(rs.getString("estado"), rs.getInt("cantidad"));
+            }
+        }
+        return conteo;
+    }
+
+    /** Indica si ya existe un vehiculo registrado con esa placa (patron escalar COUNT). */
+    public boolean existePlaca(String placa) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM vehiculos WHERE placa = ?";
+        try (Connection cn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, placa == null ? null : placa.trim().toUpperCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        }
     }
 
     /** Ejecuta un SELECT sin parametros y lo envuelve en un {@link TablaReporte}. */
