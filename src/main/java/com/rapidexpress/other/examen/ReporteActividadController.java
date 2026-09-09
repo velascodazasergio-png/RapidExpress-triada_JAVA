@@ -1,5 +1,6 @@
 package com.rapidexpress;
 
+import com.rapidexpress.model.dto.ActividadVehiculoDTO;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ReporteActividadController {
     }
 
     /** Filas del reporte, ya ordenadas por kg entregados. */
-    public List<ActividadVehiculoDTO> generar() throws SQLException {
+    public List<ActividadVehiculoDTO> generar() throws SQLExceptionn {
         return dao.actividadPorVehiculo();
     }
 
