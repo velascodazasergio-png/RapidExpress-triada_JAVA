@@ -158,6 +158,25 @@ public class ConsultaDAO {
         }
     }
 
+    /**
+     * Devuelve, para cada vehiculo, cuantos mantenimientos tiene y su costo
+     * acumulado; incluye los vehiculos sin mantenimientos con total 0
+     * (patron LEFT JOIN + COALESCE(SUM(...), 0)).
+     */
+    public TablaReporte costoMantenimientoPorVehiculo() throws SQLException {
+        String sql = """
+                SELECT v.placa                                AS placa,
+                       v.marca                                AS marca,
+                       COUNT(m.id_mantenimiento)              AS mantenimientos,
+                       ROUND(COALESCE(SUM(m.costo), 0), 2)    AS costo_total
+                FROM vehiculos v
+                LEFT JOIN mantenimientos m ON m.id_vehiculo = v.id_vehiculo
+                GROUP BY v.id_vehiculo, v.placa, v.marca
+                ORDER BY costo_total DESC
+                """;
+        return ejecutarSinParametros("COSTO DE MANTENIMIENTO POR VEHICULO", sql);
+    }
+
     /** Ejecuta un SELECT sin parametros y lo envuelve en un {@link TablaReporte}. */
     private TablaReporte ejecutarSinParametros(String titulo, String sql) throws SQLException {
         try (Connection cn = ConexionBD.obtenerConexion();
