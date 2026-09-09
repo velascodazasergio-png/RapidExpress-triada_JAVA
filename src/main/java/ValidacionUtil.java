@@ -1,4 +1,4 @@
-package com.rapidexpress.examen;
+
 
 import com.rapidexpress.excepcion.NegocioException;
 
