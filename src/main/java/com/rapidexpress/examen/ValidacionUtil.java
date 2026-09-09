@@ -3,6 +3,7 @@ package com.rapidexpress.examen;
 import com.rapidexpress.excepcion.NegocioException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 /**
@@ -100,6 +101,34 @@ public final class ValidacionUtil {
             throw new NegocioException("Telefono invalido: '" + valor + "'.");
         }
         return v;
+    }
+
+    /** Valida un anio de fabricacion coherente: entre 1950 y el proximo anio. */
+    public static int anioFabricacion(int anio) throws NegocioException {
+        int actual = LocalDate.now().getYear();
+        return enteroEnRango("anio de fabricacion", anio, 1950, actual + 1);
+    }
+
+    /** Exige una fecha presente que no este en el futuro. */
+    public static LocalDate fechaNoFutura(String campo, LocalDate fecha) throws NegocioException {
+        if (fecha == null) {
+            throw new NegocioException("La fecha '" + campo + "' es obligatoria.");
+        }
+        if (fecha.isAfter(LocalDate.now())) {
+            throw new NegocioException("La fecha '" + campo + "' no puede ser futura.");
+        }
+        return fecha;
+    }
+
+    /** Exige un rango de fechas valido: ambas presentes y la final no anterior a la inicial. */
+    public static void rangoFechas(LocalDate desde, LocalDate hasta) throws NegocioException {
+        if (desde == null || hasta == null) {
+            throw new NegocioException("Debe indicar las dos fechas del rango.");
+        }
+        if (hasta.isBefore(desde)) {
+            throw new NegocioException("La fecha final (" + hasta + ") no puede ser anterior a la inicial ("
+                    + desde + ").");
+        }
     }
 
     /** Comprueba que un valor pertenezca al conjunto de opciones permitidas. */
