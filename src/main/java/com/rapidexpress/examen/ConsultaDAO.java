@@ -51,6 +51,27 @@ public class ConsultaDAO {
         return lista;
     }
 
+    /**
+     * Lista los conductores en estado Activo que hoy no tienen ningun vehiculo
+     * asignado (patron LEFT JOIN + IS NULL: "los que NO tienen ...").
+     */
+    public TablaReporte conductoresSinVehiculo() throws SQLException {
+        String sql = """
+                SELECT c.id_conductor        AS id,
+                       c.identificacion      AS identificacion,
+                       c.nombre_completo     AS nombre,
+                       c.tipo_licencia       AS licencia,
+                       c.contacto            AS contacto
+                FROM conductores c
+                LEFT JOIN asignaciones_conductor_vehiculo a
+                       ON a.id_conductor = c.id_conductor AND a.fecha_fin IS NULL
+                WHERE a.id_asignacion IS NULL
+                  AND c.estado = 'Activo'
+                ORDER BY c.nombre_completo
+                """;
+        return ejecutarSinParametros("CONDUCTORES ACTIVOS SIN VEHICULO ASIGNADO", sql);
+    }
+
     /** Ejecuta un SELECT sin parametros y lo envuelve en un {@link TablaReporte}. */
     private TablaReporte ejecutarSinParametros(String titulo, String sql) throws SQLException {
         try (Connection cn = ConexionBD.obtenerConexion();
